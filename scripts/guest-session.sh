@@ -26,7 +26,19 @@ sleep .35
 if ! kill -0 "${children[${#children[@]}-1]}" 2>/dev/null; then echo 'Openbox encerrou. Leia openbox.log.' >&2; exit 1; fi
 xsetroot -solid '#090d1b' >/dev/null 2>&1 || true
 if command -v feh >/dev/null; then
-  wallpaper="$(python3 -c "import json,os; p=os.path.expanduser("~/.config/novaos/settings.json"); print(json.load(open(p)).get("wallpaper", "$APP/assets/wallpapers/nova-night.webp"))" 2>/dev/null || echo "$APP/assets/wallpapers/nova-night.webp")"
+  wallpaper="$(python3 - "$APP/assets/wallpapers/nova-night.webp" <<'PY'
+import json
+import sys
+from pathlib import Path
+fallback = sys.argv[1]
+try:
+    config = json.loads((Path.home() / '.config/novaos/settings.json').read_text(encoding='utf-8'))
+    selected = config.get('wallpaper') if isinstance(config, dict) else None
+    print(selected if isinstance(selected, str) and Path(selected).is_file() else fallback)
+except (OSError, ValueError, TypeError):
+    print(fallback)
+PY
+)"
   [ -f "$wallpaper" ] && feh --no-fehbg --bg-fill "$wallpaper" >>"$STATE/wallpaper.log" 2>&1 || true
 fi
 python3 "$APP/nova-shell/main.py" >>"$STATE/novashell.log" 2>&1 & children+=("$!")

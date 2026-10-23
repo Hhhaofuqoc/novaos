@@ -25,15 +25,38 @@ class NovaShell:
         self.cfg=state.load()
         self.profile=os.environ.get('NOVAOS_PROFILE','full')
         self.panel=Panel(self.width,self.toggle_menu,self.open_settings)
-        self.launcher=Launcher(self.width,self.height,self.open_settings)
-        self.dock=Dock(self.width,self.height,self.toggle_menu)
-        self.sidebar=Sidebar(self.width,self.height) if self.profile=='full' and self.cfg['show_sidebar'] else None
         self.panel.show_all()
-        if self.cfg['show_dock']: self.dock.show_all()
-        if self.sidebar:self.sidebar.show_all()
+        # A barra deve continuar funcionando mesmo se um widget opcional falhar.
+        self.launcher=None
+        self.dock=None
+        self.sidebar=None
+        import traceback
+        try:
+            self.launcher=Launcher(self.width,self.height,self.open_settings)
+        except Exception:
+            print('[NovaShell] Erro ao carregar NovaMenu:', flush=True)
+            traceback.print_exc()
+        if self.cfg['show_dock']:
+            try:
+                self.dock=Dock(self.width,self.height,self.toggle_menu)
+                self.dock.show_all()
+            except Exception:
+                print('[NovaShell] Erro ao carregar NovaDock:', flush=True)
+                traceback.print_exc()
+        if self.profile=='full' and self.cfg['show_sidebar']:
+            try:
+                self.sidebar=Sidebar(self.width,self.height)
+                self.sidebar.show_all()
+            except Exception:
+                print('[NovaShell] Erro ao carregar NovaMonitor:', flush=True)
+                traceback.print_exc()
         GLib.timeout_add_seconds(2,self.health)
 
-    def toggle_menu(self):self.launcher.toggle()
+    def toggle_menu(self):
+        if self.launcher is not None:
+            self.launcher.toggle()
+        else:
+            print('[NovaShell] NovaMenu indisponivel: veja novashell.log', flush=True)
 
     def open_settings(self):
         try:subprocess.Popen(['/usr/local/bin/nova-settings'])

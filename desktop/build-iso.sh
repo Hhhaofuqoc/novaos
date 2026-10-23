@@ -52,7 +52,8 @@ fi
 printf '%s\n' "$edition" > "$workdir/.novaos-build"
 NOVAOS_DIST_DIR="$out" bash "$repo/scripts/build-deb.sh"
 cd -- "$workdir"
-export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-0}
+export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(git -C "$repo" log -1 --format=%ct 2>/dev/null || date +%s)}
+export MKSQUASHFS_OPTIONS="${MKSQUASHFS_OPTIONS:--b 1M -Xbcj x86 -processors 2 -mem 1G}"
 lb config \
     --mode debian \
     --distribution trixie \
@@ -64,11 +65,12 @@ lb config \
     --debian-installer "$installer" \
     --debian-installer-gui true \
     --apt-recommends false \
-    --firmware-binary true \
+    --firmware-binary false \
     --firmware-chroot true \
     --security true \
     --updates true \
     --backports false \
+    --chroot-squashfs-compression-type xz \
     --memtest none \
     --mirror-bootstrap https://deb.debian.org/debian \
     --mirror-chroot https://deb.debian.org/debian \
@@ -83,6 +85,14 @@ mkdir -p config/package-lists config/packages.chroot
 cat "$repo/desktop/packages-lite.txt" "$repo/desktop/packages-desktop.txt" \
     | sed '/^[[:space:]]*#/d; /^[[:space:]]*$/d' | LC_ALL=C sort -u > config/package-lists/novaos.list.chroot
 if [[ $edition == plasma ]]; then
+    mkdir -p config/includes.chroot/etc/xdg
+    cat > config/includes.chroot/etc/xdg/kwinrc <<'KWIN'
+[Desktops]
+Number=4
+Rows=1
+[Compositing]
+Enabled=false
+KWIN
     sed '/^[[:space:]]*#/d; /^[[:space:]]*$/d' "$repo/desktop/packages-plasma.txt" >> config/package-lists/novaos.list.chroot
 fi
 cp -a "$repo/desktop/live-config/." config/
@@ -96,7 +106,7 @@ if [[ $edition == plasma ]]; then
 [Theme]
 Current=breeze
 [Autologin]
-Session=plasma.desktop
+Session=plasmax11.desktop
 SDDM
     # Use SDDM instead of running two display managers. Xfce remains a fallback.
     sed -i '/^lightdm$/d; /^lightdm-gtk-greeter$/d' config/package-lists/novaos.list.chroot
@@ -106,8 +116,20 @@ set -eu
 mkdir -p /etc/X11
 printf '/usr/bin/sddm\n' > /etc/X11/default-display-manager
 systemctl enable sddm.service
+update-alternatives --set x-session-manager /usr/bin/startplasma-x11
 HOOK
     chmod +x config/hooks/live/0910-novaos-plasma.hook.chroot
+    # Debian 13 live-config maps startplasma-x11 to the Wayland session name.
+    # Correct the generated LIVE config after sddm's live-config component.
+    mkdir -p config/includes.chroot/usr/lib/live/config
+    cat > config/includes.chroot/usr/lib/live/config/0086-novaos-plasma <<'LIVE'
+#!/bin/sh
+set -eu
+if [ -f /etc/sddm.conf ]; then
+    sed -i 's/^Session=.*/Session=plasmax11.desktop/' /etc/sddm.conf
+fi
+LIVE
+    chmod +x config/includes.chroot/usr/lib/live/config/0086-novaos-plasma
 fi
 printf 'Configured %s edition in %s\n' "$edition" "$workdir"
 [[ $configure_only == false ]] || exit 0

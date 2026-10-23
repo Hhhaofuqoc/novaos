@@ -15,9 +15,10 @@ command -v kwriteconfig6 >/dev/null || { echo 'Plasma 6 não instalado.' >&2; ex
 if [[ ! -f $state/plasma-config-v2 ]]; then
   backup="$state/backups/plasma-$(date -u +%Y%m%dT%H%M%S)-$$"
   mkdir -p "$backup"
-  for file in kdeglobals kwinrc plasma-org.kde.plasma.desktop-appletsrc; do
+  for file in kdeglobals kwinrc plasma-org.kde.plasma.desktop-appletsrc konsolerc; do
     [[ ! -f $config/$file ]] || cp -a "$config/$file" "$backup/"
   done
+  kwriteconfig6 --file konsolerc --group 'Desktop Entry' --key DefaultProfile NovaOS.profile
   printf '%s\n' "$backup" > "$state/plasma-config-v2"
 fi
 kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle Breeze

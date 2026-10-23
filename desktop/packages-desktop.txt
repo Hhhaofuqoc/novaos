@@ -24,3 +24,5 @@ nano
 alsa-utils
 xfce4-power-manager
 conky-std
+qemu-guest-agent
+wmctrl

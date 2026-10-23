@@ -41,5 +41,25 @@ PY
 )"
   [ -f "$wallpaper" ] && feh --no-fehbg --bg-fill "$wallpaper" >>"$STATE/wallpaper.log" 2>&1 || true
 fi
-python3 "$APP/nova-shell/main.py" >>"$STATE/novashell.log" 2>&1 & children+=("$!")
-wait "${children[${#children[@]}-1]}"
+echo "[NovaOS] Iniciando NovaShell em DISPLAY=${DISPLAY:-indefinido}" >>"$STATE/novashell.log"
+python3 -u "$APP/nova-shell/main.py" >>"$STATE/novashell.log" 2>&1 &
+shell_pid=$!
+children+=("$shell_pid")
+if wait "$shell_pid"; then
+  echo "[NovaOS] NovaShell encerrou normalmente." >>"$STATE/novashell.log"
+else
+  rc=$?
+  echo "[NovaOS] NovaShell encerrou com erro (codigo $rc)." | tee -a "$STATE/novashell.log"
+  if command -v xterm >/dev/null 2>&1; then
+    xterm -T 'NovaOS - erro da NovaShell' -geometry 100x30 -fa 'DejaVu Sans Mono' -fs 10 -e /bin/bash -c '
+      echo "Falha ao abrir a NovaShell. Logs de diagnostico:"
+      echo
+      tail -n 80 "$HOME/.local/state/novaos/logs/novashell.log"
+      echo
+      echo "Copie esta mensagem e envie ao ChatGPT."
+      printf "Pressione Enter para fechar... "
+      read -r _
+    ' || true
+  fi
+  exit "$rc"
+fi

@@ -1,0 +1,14 @@
+#!/bin/bash
+# Show real VM metrics and Debian base, without falsely reporting Android/PRoot.
+set +e
+command -v nova-logo >/dev/null 2>&1 && nova-logo
+. /etc/os-release
+printf '\033[1;35mNovaOS 1.0 Full\033[0m (NovaShell)\n'
+printf 'Linux base: %s\n' "${PRETTY_NAME:-Linux}"
+printf 'Architecture: %s\n' "$(uname -m)"
+printf 'Linux kernel (VM): %s\n' "$(uname -r)"
+printf 'Window manager: Openbox\n'
+printf 'Shell: %s\n' "${SHELL:-unknown}"
+awk '/MemTotal:/ {printf "Physical RAM: %.2f GiB\n", $2/1048576}' /proc/meminfo
+printf 'Storage: '; df -h "$HOME" | awk 'END {printf "%s free of %s\n", $4,$2}'
+printf 'Uptime: '; uptime -p

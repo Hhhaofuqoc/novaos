@@ -1,0 +1,81 @@
+# NovaOS Full 1.0 — Debian 13 (trixie), amd64 LIVE image.
+# Core Linux boot + display
+linux-image-amd64
+live-boot
+live-config
+systemd-sysv
+sudo
+locales
+console-setup
+keyboard-configuration
+xorg
+xserver-xorg-input-libinput
+openbox
+lightdm
+lightdm-gtk-greeter
+x11-utils
+x11-xserver-utils
+xinit
+wmctrl
+xdotool
+xterm
+feh
+# NovaShell (GTK3)
+python3
+python3-gi
+python3-cairo
+python3-psutil
+gir1.2-gtk-3.0
+librsvg2-common
+dbus-x11
+# Full apps
+pcmanfm
+lxterminal
+geany
+firefox-esr
+libreoffice-writer
+libreoffice-calc
+mpv
+vlc
+gpicview
+file-roller
+mousepad
+htop
+fastfetch
+# Desktop services & multimedia
+pulseaudio
+pulseaudio-utils
+pavucontrol
+alsa-utils
+playerctl
+network-manager
+network-manager-gnome
+gvfs
+gvfs-backends
+udisks2
+upower
+xdg-utils
+xdg-user-dirs
+lxpolkit
+libnotify-bin
+# VM guest integration and tools
+qemu-guest-agent
+spice-vdagent
+openssh-client
+curl
+wget
+git
+nano
+vim-tiny
+zip
+unzip
+procps
+iproute2
+pciutils
+mesa-utils
+# Identity, fonts
+fonts-dejavu-core
+fonts-noto-core
+fonts-noto-color-emoji
+adwaita-icon-theme
+hicolor-icon-theme

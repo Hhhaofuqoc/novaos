@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=NovaOS (NovaShell)
+Comment=NovaOS 1.0 full desktop session
+Exec=/usr/local/bin/novaos-vm-session
+TryExec=/usr/local/bin/novaos-vm-session
+DesktopNames=NovaShell

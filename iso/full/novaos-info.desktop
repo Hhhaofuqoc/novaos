@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Informações NovaOS
+Comment=Logo NovaOS e dados reais do sistema
+Icon=utilities-system-monitor
+Exec=lxterminal -e nova-fetch
+Categories=System;Utility;
+Terminal=false

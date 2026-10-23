@@ -1,0 +1,76 @@
+name: NovaOS Full ISO (amd64)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/novaos-full-iso.yml'
+      - 'iso/full/**'
+      - 'nova-shell/**'
+      - 'assets/**'
+      - 'themes/**'
+      - 'config/openbox/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: novaos-full-iso-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  iso:
+    name: Build Debian 13 NovaOS Full ISO
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout NovaOS source
+        uses: actions/checkout@v4
+      - name: Free ephemeral runner disk space
+        run: |
+          df -h /
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/hostedtoolcache /usr/local/share/powershell
+          sudo docker image prune -af || true
+          df -h /
+      - name: Build real bootable ISO in Debian 13
+        run: |
+          docker run --rm --privileged \
+            -e DEBIAN_FRONTEND=noninteractive \
+            -v "$GITHUB_WORKSPACE:/src" -w /src \
+            debian:trixie-slim bash iso/full/build.sh
+      - name: Check ISO is nonempty
+        run: |
+          test -s dist/NovaOS-v1.0-Full-amd64.iso
+          ls -lh dist/NovaOS-v1.0-Full-amd64.iso
+          ( cd dist && sha256sum -c SHA256SUMS.txt )
+          file dist/NovaOS-v1.0-Full-amd64.iso
+      - name: Upload NovaOS ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: NovaOS-v1.0-Full-amd64
+          path: |
+            dist/NovaOS-v1.0-Full-amd64.iso
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+      - name: Install headless QEMU for boot smoke
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qemu-system-x86 socat
+      - name: Boot ISO in QEMU and capture real screen
+        run: sudo -E NOVAOS_SMOKE_SECONDS=100 bash iso/full/boot-smoke.sh
+      - name: Upload real QEMU boot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: NovaOS-QEMU-boot-evidence
+          path: |
+            dist/vm-smoke/RESULT.txt
+            dist/vm-smoke/screenshot.ppm
+            dist/vm-smoke/serial.log
+            dist/vm-smoke/qemu.log
+            dist/vm-smoke/monitor.log
+          if-no-files-found: ignore
+          retention-days: 14

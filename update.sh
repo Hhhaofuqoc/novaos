@@ -4,7 +4,9 @@ ROOT="$(cd "$(dirname "$0")" && pwd -P)"
 SOURCE="$HOME/.local/share/novaos/source-git"
 REMOTE="https://github.com/Hhhaofuqoc/novaos.git"
 say(){ printf '[NovaOS update] %s\n' "$*"; }
-if [[ -d "$ROOT/.git" ]]; then
+# Uma instalacao antiga pode ter deixado .git incompleto em app/.
+# Nunca usar esse checkout de runtime como fonte de atualizacoes.
+if [[ "$ROOT" != "$HOME/.local/share/novaos/app" && -d "$ROOT/.git" ]]; then
   SOURCE="$ROOT"
 elif [[ -d "$HOME/novaos-src/.git" ]]; then
   SOURCE="$HOME/novaos-src"

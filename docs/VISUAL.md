@@ -110,3 +110,16 @@ de botões, nos estados ativo e `:backdrop`, nos dois temas. Os valores são
 iguais entre estados: escuro `#10091C`/`#EDE6FF`, claro `#F3EDFC`/`#261237`.
 Isso impede que regras herdadas do Adwaita tornem o NovaMonitor cinza e pouco
 legível quando outra janela recebe foco.
+
+## Atualização Plasma e NovaFetch
+
+A integração experimental Plasma 6 usa Breeze com esquema NovaOS, ícones próprios,
+painel superior flutuante, dock inferior, wallpaper original e Konsole roxo escuro.
+O perfil Lite desliga composição e blur. O layout inicial é aplicado uma vez;
+alterações posteriores dos painéis são preservadas. Configurações anteriores
+ficam em `~/.config/novaos/backups/plasma-*`.
+
+NovaFetch usa Fastfetch real, logo original e seções com cores roxo/ciano, com
+formatos compacto e amplo. Veja [instalação e limites](PLASMA-MOBILE.md).
+A [captura real](validation/plasma-desktop.png) foi feita em Debian/Xvfb com KWin,
+não em Android nem em uma simulação web.

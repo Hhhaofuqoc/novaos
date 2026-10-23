@@ -66,9 +66,7 @@ def apply_appearance(settings=None, profile=None):
     if not os.environ.get("DISPLAY") or not os.environ.get("DBUS_SESSION_BUS_ADDRESS"):
         return "Salvo. A aparência será aplicada na próxima sessão gráfica."
     desktop = os.environ.get("XDG_CURRENT_DESKTOP", "XFCE").upper()
-    if "KDE" in desktop:
-        return "Salvo. Integração visual Plasma ainda não implementada; use a sessão XFCE."
-    script = asset_root()/"themes"/"apply-xfce.sh"
+    script = asset_root()/"themes"/("apply-plasma.sh" if "KDE" in desktop else "apply-xfce.sh")
     result = subprocess.run(["bash", str(script), profile or current_profile(settings), settings["theme"]],
                             capture_output=True, text=True, timeout=45)
     if result.returncode:
@@ -82,6 +80,12 @@ APPS = {"files": ["thunar"], "terminal": ["xfce4-terminal"], "browser": ["firefo
 
 def launch(command, arguments=()):
     args = APPS.get(command, ["novaos", command]) + list(arguments)
+    if 'KDE' in os.environ.get('XDG_CURRENT_DESKTOP','').upper():
+        kde = {'files':['dolphin'], 'terminal':['konsole'],
+               'desktop-settings':['systemsettings'], 'display':['systemsettings'],
+               'keyboard':['systemsettings','kcm_keyboard'], 'mouse':['systemsettings','kcm_mouse']}
+        if command in kde:
+            args = kde[command] + list(arguments)
     if not shutil.which(args[0]):
         raise RuntimeError(f"Aplicativo não instalado: {args[0]}")
     return subprocess.Popen(args, start_new_session=True)
@@ -99,6 +103,8 @@ def package_terminal(action, package=None):
         args.insert(0, "sudo" if is_mobile() else "pkexec")
     if not shutil.which(args[0]):
         raise RuntimeError(f"Instale {args[0]} ou use o terminal administrativo.")
+    if 'KDE' in os.environ.get('XDG_CURRENT_DESKTOP','').upper():
+        return launch('terminal',['--hold','-e',*args])
     return launch("terminal", ["--disable-server", "--hold", "--title=NovaStore", "--execute", *args])
 
 def session(once=False):

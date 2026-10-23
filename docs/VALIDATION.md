@@ -5,6 +5,14 @@ XFWM reais. **Nenhum teste foi executado em Android físico ou em PRoot real.**
 A entrega tem prioridade Mobile Lite; compatibilidade do Moto G34 precisa da
 verificação no próprio aparelho, conforme o roteiro no fim deste documento.
 
+Atualização visual: 77 testes unitários/lifecycle passaram; shellcheck dos novos
+scripts e build real dos pacotes Debian passaram. Fastfetch 2.40.4 executou os
+dois formatos. Plasma 6.3.6 iniciou sob X11/Xvfb com KWin real, tema, painéis,
+wallpaper e Konsole executando NovaFetch. Evidências:
+[relatório](validation/plasma-report.json), [captura](validation/plasma-desktop.png)
+e [guia experimental](PLASMA-MOBILE.md). São resultados nativos x86_64; não são
+medidas do Moto G34. O relatório preserva avisos de serviços indisponíveis.
+
 ## Resultados
 
 | Área | Executado | Resultado / limite |

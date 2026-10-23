@@ -202,6 +202,19 @@ while True: time.sleep(1)
         self.assertIn(b'novaos-lite',command)
         self.assertNotIn(b'novaos',command)
 
+    def test_desktop_selection_persists_and_requires_stopped_session(self):
+        self.assertEqual(self.app.desktop(),'xfce')
+        self.assertEqual(self.app.desktop('plasma'),'plasma')
+        self.app=module.Mobile(self.app.state,self.prefix)
+        self.start_mock_services()
+        desktop=self.app.read()['children']['desktop']['pid']
+        command=Path(f'/proc/{desktop}/cmdline').read_bytes().split(b'\0')
+        self.assertIn(b'plasma',command)
+        self.assertEqual(self.app.read()['desktop'],'plasma')
+        with self.assertRaises(RuntimeError): self.app.desktop('xfce')
+        self.app.stop()
+        self.assertEqual(self.app.desktop('xfce'),'xfce')
+
     def test_logs_are_bounded(self):
         self.app.log("x" * (module.MAX_LOG + 1))
         # Each record is capped; rotation also handles larger previous logs.

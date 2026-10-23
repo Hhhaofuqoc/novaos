@@ -1,0 +1,12 @@
+# Minimal X11 Plasma session for PRoot: no display/login manager.
+plasma-workspace
+plasma-desktop
+kwin-x11
+konsole
+dolphin
+systemsettings
+breeze
+breeze-icon-theme
+kde-style-breeze
+plasma-pa
+libglib2.0-bin

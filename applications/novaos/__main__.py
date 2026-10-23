@@ -2,6 +2,7 @@
 from __future__ import annotations
 import argparse
 import json
+import subprocess
 import sys
 from . import __version__
 
@@ -18,10 +19,17 @@ def main(argv=None):
     subs.add_parser("session-init").add_argument("--once", action="store_true")
     # Keep GApplication's player control options intact.
     args_list = list(sys.argv[1:] if argv is None else argv)
+    if args_list and args_list[0] == "fetch":
+        try:
+            return subprocess.call(["novafetch", *args_list[1:]])
+        except OSError as error:
+            print(f"NovaOS: {error}", file=sys.stderr)
+            return 1
     if args_list and args_list[0] == "music":
         from .music import main as music_main
         return music_main(args_list[1:])
     subs.add_parser("music", help="Player local; novaos music --help")
+    subs.add_parser("fetch", help="Informações reais com identidade NovaOS")
     args = parser.parse_args(args_list)
     from . import system
     try:

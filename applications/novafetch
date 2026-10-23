@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# NovaOS presentation, native Fastfetch probes. No network requests or render loop.
+set -euo pipefail
+assets=${NOVAOS_FETCH_ASSETS:-/usr/share/novaos/fetch}
+backend=${NOVAOS_FASTFETCH_BIN:-/usr/bin/fastfetch}
+columns=${COLUMNS:-80}
+if [[ -t 1 ]] && command -v tput >/dev/null; then columns=$(tput cols 2>/dev/null || printf 80); fi
+[[ $columns =~ ^[0-9]+$ ]] || columns=80
+profile=compact
+(( columns < 100 )) || profile=wide
+plain=false
+while (($#)); do
+  case $1 in
+    --compact) profile=compact; shift ;;
+    --wide) profile=wide; shift ;;
+    --plain) plain=true; shift ;;
+    --help|-h)
+      printf '%s\n' 'NovaFetch — Your universe. Your system.' \
+        'Uso: novafetch [--compact|--wide] [--plain] [opções Fastfetch]' \
+        'Cores e logo originais; informações obtidas pelo Fastfetch.'
+      exit 0 ;;
+    *) break ;;
+  esac
+done
+[[ -x $backend ]] || { echo 'Instale fastfetch no Debian: apt-get install fastfetch' >&2; exit 1; }
+[[ -f $assets/$profile.jsonc ]] || { echo "Configuração NovaFetch ausente: $assets/$profile.jsonc" >&2; exit 1; }
+options=(--config "$assets/$profile.jsonc")
+[[ $plain == false ]] || options+=(--pipe true --logo none)
+exec "$backend" "${options[@]}" "$@"

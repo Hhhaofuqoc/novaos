@@ -20,8 +20,10 @@ remove esse armazenamento privado: faça backup externo antes.
 ## Desktop
 
 Debian 13 stable (trixie), kernel Debian, systemd, APT, LightDM e XFCE para Lite.
-Uma lista separada permite build com Plasma. A integração visual entregue é XFCE;
-Plasma ainda requer implementação visual e testes. A receita live-build inclui
+Uma lista separada permite build com Plasma. A atualização Mobile experimental
+adiciona Plasma 6 X11, KWin, Konsole e Dolphin, com tema e painéis NovaOS; inicia
+sem systemd de usuário. Foi testada em Debian x86_64/Xvfb, ainda não em ARM64/PRoot.
+A receita live-build inclui
 boot BIOS/UEFI, opção de persistência e Debian Installer; nenhuma inicialização
 de ISO foi validada nesta entrega.
 
@@ -64,5 +66,6 @@ não substituem assinatura de autor nem uma origem de download confiável.
 
 A instalação instala apenas caminhos do projeto e preserva a home. Atualização
 é reaplicação das fontes verificadas. O launcher implementa backup/restauração
-e exige confirmação explícita para remover o ambiente. Não há publicação externa
-automática executada; workflows de release precisam de um repositório configurado.
+e exige confirmação explícita para remover o ambiente. Os downloads Mobile são
+publicados em branches dedicadas do repositório; workflows de release produzem
+artefatos quando executados no GitHub.

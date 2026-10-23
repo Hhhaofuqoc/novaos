@@ -42,6 +42,8 @@ Android, atualização, encerramento, backup, restauração e desinstalação.
 ## Implementado
 
 - Sessão XFCE real: janelas, desktops, dock, menu, relógio, notificações e volume.
+- Atualização opcional [Plasma Mobile experimental e NovaFetch](docs/PLASMA-MOBILE.md),
+  com Konsole, Dolphin, painéis flutuantes e fetch personalizado sobre Fastfetch.
 - Tema neon escuro e claro, ícones e wallpapers originais desktop/mobile.
 - Perfis Lite/Balanced/Ultra; início Lite no Android, economia manual e redução
   de efeitos com pressão de memória/bateria quando essas leituras estão acessíveis.
@@ -61,8 +63,9 @@ Os testes gráficos usam Linux x86_64 com Xvfb e um gerenciador XFWM real;
 touchscreen, saída física de áudio e boot de ISO ainda exigem validação.**
 Não há garantia de consumo de RAM ou velocidade no seu celular.
 
-Esta alpha não implementa wallpaper animado, visualizador de áudio, blur, APK
-próprio ou integração visual completa de Plasma. Não há screenshots de referência
+Esta alpha não implementa wallpaper animado, visualizador de áudio, blur ou APK
+próprio. A integração Plasma tem teste nativo X11; ARM64/PRoot ainda exige validação.
+Não há screenshots de referência
 disponíveis no projeto; a arte segue a descrição fornecida. Wi-Fi, Bluetooth,
 permissões e suspensão continuam geridos pelo Android na edição Mobile.
 

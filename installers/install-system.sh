@@ -45,10 +45,14 @@ copy_tree() {
 # Do not remove old code or resources recursively: this is safe to rerun on update.
 copy_tree "$repo/applications/novaos" usr/lib/python3/dist-packages/novaos
 copy_tree "$repo/themes" usr/share/novaos/themes
+copy_tree "$repo/themes/fetch" usr/share/novaos/fetch
 copy_tree "$repo/wallpapers" usr/share/novaos/wallpapers
 copy_tree "$repo/themes/NovaOS-Dark" usr/share/themes/NovaOS-Dark
 copy_tree "$repo/themes/NovaOS-Light" usr/share/themes/NovaOS-Light
 copy_tree "$repo/themes/icons/NovaOS" usr/share/icons/NovaOS
+for asset in NovaOS.profile NovaOS.colorscheme; do
+    install_file "$repo/themes/plasma/$asset" "usr/share/konsole/$asset"
+done
 for asset in cover.svg LICENSE; do
     [[ ! -f $repo/music/$asset ]] || install_file "$repo/music/$asset" "usr/share/novaos/music/$asset"
 done
@@ -66,6 +70,7 @@ cat > "$destdir/usr/bin/novaos" <<'LAUNCHER'
 exec /usr/bin/python3 -m novaos "$@"
 LAUNCHER
 chmod 0755 "$destdir/usr/bin/novaos"
+install_file "$repo/applications/novafetch" usr/bin/novafetch 0755
 wrapper() {
     local name=$1 command=$2
     printf '#!/bin/sh\nexec %s "$@"\n' "$command" > "$destdir/usr/bin/$name"
@@ -105,6 +110,14 @@ entry novaos-editor NovaEditor 'Editor de texto e código com Mousepad' 'novaos-
 entry novaos-browser 'Navegador Firefox ESR' 'Navegar na Web' 'novaos-browser %U' novaos-browser 'Network;WebBrowser;'
 entry novaos-store NovaStore 'Instalar pacotes dos repositórios APT configurados' 'novaos store' novaos-store 'System;PackageManager;'
 entry novaos-updater NovaUpdater 'Revisar e instalar atualizações Debian' 'novaos updater' novaos-updater 'System;PackageManager;'
+entry novaos-plasma-terminal NovaTerminal 'Terminal Linux real com Konsole' konsole /usr/share/icons/NovaOS/scalable/apps/novaos-terminal.svg 'System;TerminalEmulator;'
+entry novaos-plasma-files NovaFiles 'Arquivos e pastas com Dolphin' 'dolphin %U' /usr/share/icons/NovaOS/scalable/apps/novaos-files.svg 'System;FileTools;FileManager;'
+# Absolute NovaOS icons also resolve in Plasma when composition is disabled.
+for component in welcome browser music notes; do
+    icon="novaos-$component"
+    [[ $component != welcome ]] || icon=novaos
+    sed -i "s|^Icon=.*|Icon=/usr/share/icons/NovaOS/scalable/apps/$icon.svg|" "$destdir/usr/share/applications/novaos-$component.desktop"
+done
 cat > "$destdir/etc/xdg/autostart/novaos-session.desktop" <<'AUTOSTART'
 [Desktop Entry]
 Type=Application
@@ -112,7 +125,7 @@ Name=NovaOS session configuration
 Comment=Apply the saved NovaOS profile and first-run desktop layout
 Exec=novaos session-init
 TryExec=novaos
-OnlyShowIn=XFCE;
+OnlyShowIn=XFCE;KDE;
 Terminal=false
 StartupNotify=false
 X-GNOME-Autostart-enabled=true

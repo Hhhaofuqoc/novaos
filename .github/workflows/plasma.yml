@@ -1,0 +1,37 @@
+name: Experimental Mobile Plasma native smoke test
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  plasma-x11:
+    runs-on: ubuntu-24.04
+    container: debian:trixie-slim
+    steps:
+      - name: Install build and capture tools
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates python3 python3-psutil xvfb xauth dbus-x11 wmctrl imagemagick
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install a real NovaOS guest and optional Plasma packages
+        run: |
+          printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d
+          chmod 755 /usr/sbin/policy-rc.d
+          sed '/^#/d;/^$/d' desktop/packages-lite.txt | xargs apt-get install -y --no-install-recommends
+          bash installers/install-system.sh --without-music
+          useradd --create-home --shell /bin/bash nova
+          touch /etc/novaos-mobile-owner
+          bash installers/install-visual-update.sh --plasma
+      - name: Boot Plasma X11 and capture the actual desktop
+        run: |
+          runuser -u nova -- env NOVAOS_PLASMA_SCREENSHOT=/tmp/plasma.png xvfb-run -a -s '-screen 0 1600x900x24' /usr/bin/python3 tests/integration/plasma_boot.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-plasma-evidence-not-android
+          path: |
+            /tmp/plasma.png
+            /tmp/novaos-plasma-report.json
+          if-no-files-found: error

@@ -1,0 +1,95 @@
+test_download_failure_preserves_existing_home_data (test_bootstrap.BootstrapTests.test_download_failure_preserves_existing_home_data) ... ok
+test_download_only_never_executes_installation (test_bootstrap.BootstrapTests.test_download_only_never_executes_installation) ... ok
+test_generated_script_checksum_and_https_requirement (test_bootstrap.BootstrapTests.test_generated_script_checksum_and_https_requirement) ... ok
+test_source_manifest_failure_never_installs (test_bootstrap.BootstrapTests.test_source_manifest_failure_never_installs) ... ok
+test_tampered_archive_never_extracts_or_executes (test_bootstrap.BootstrapTests.test_tampered_archive_never_extracts_or_executes) ... ok
+test_verified_download_installs_and_preserves_sources (test_bootstrap.BootstrapTests.test_verified_download_installs_and_preserves_sources) ... ok
+test_adaptive_pressure_and_battery (test_core.CoreTests.test_adaptive_pressure_and_battery) ... ok
+test_apt_helper_only_allows_package_operations (test_core.CoreTests.test_apt_helper_only_allows_package_operations) ... ok
+test_config_survives_updates_and_invalid_data (test_core.CoreTests.test_config_survives_updates_and_invalid_data) ... ok
+test_failed_atomic_replace_preserves_previous_notes (test_core.CoreTests.test_failed_atomic_replace_preserves_previous_notes) ... ok
+test_headless_cli_preserves_profile_without_gtk (test_core.CoreTests.test_headless_cli_preserves_profile_without_gtk) ... ok
+test_manual_saver_overrides_disabled_adaptation (test_core.CoreTests.test_manual_saver_overrides_disabled_adaptation) ... ok
+test_mobile_always_starts_lite (test_core.CoreTests.test_mobile_always_starts_lite) ... ok
+test_package_launch_never_invokes_shell (test_core.CoreTests.test_package_launch_never_invokes_shell) ... ok
+test_checksum_failure_never_extracts (test_mobile.BackupTests.test_checksum_failure_never_extracts) ... ok
+test_empty_backup_rejected (test_mobile.BackupTests.test_empty_backup_rejected) ... ok
+test_other_container_and_traversal_rejected (test_mobile.BackupTests.test_other_container_and_traversal_rejected) ... ok
+test_restore_cancelled_does_not_mutate (test_mobile.BackupTests.test_restore_cancelled_does_not_mutate) ... ok
+test_uninstall_requires_exact_confirmation (test_mobile.BackupTests.test_uninstall_requires_exact_confirmation) ... ok
+test_valid_backup (test_mobile.BackupTests.test_valid_backup) ... ok
+test_current_process_identity_and_reused_pid_rejection (test_mobile.IdentityTests.test_current_process_identity_and_reused_pid_rejection) ... ok
+test_stale_x_socket_cleanup_only_for_recorded_dead_server (test_mobile.IdentityTests.test_stale_x_socket_cleanup_only_for_recorded_dead_server) ... ok
+test_termination_refuses_wrong_identity (test_mobile.IdentityTests.test_termination_refuses_wrong_identity) ... ok
+test_desktop_selection_persists_and_requires_stopped_session (test_mobile.LifecycleTests.test_desktop_selection_persists_and_requires_stopped_session) ... ok
+test_logs_are_bounded (test_mobile.LifecycleTests.test_logs_are_bounded) ... ok
+test_start_stop_real_process_tracking (test_mobile.LifecycleTests.test_start_stop_real_process_tracking) ... ok
+test_supervisor_crash_recovery_preserves_unrelated_process (test_mobile.LifecycleTests.test_supervisor_crash_recovery_preserves_unrelated_process) ... ok
+test_supervisor_starts_the_saved_container (test_mobile.LifecycleTests.test_supervisor_starts_the_saved_container) ... ok
+test_current_cli_help_on_stderr_is_accepted (test_mobile_preflight.MobilePreflightTests.test_current_cli_help_on_stderr_is_accepted) ... ok
+test_help_on_stdout_is_also_accepted (test_mobile_preflight.MobilePreflightTests.test_help_on_stdout_is_also_accepted) ... ok
+test_legacy_cli_is_rejected_before_installing_rootfs (test_mobile_preflight.MobilePreflightTests.test_legacy_cli_is_rejected_before_installing_rootfs) ... ok
+test_real_command_failure_is_not_reported_as_old_version (test_mobile_preflight.MobilePreflightTests.test_real_command_failure_is_not_reported_as_old_version) ... ok
+test_invalid_saved_name_stops_without_falling_back (test_mobile_selection.SelectionTests.test_invalid_saved_name_stops_without_falling_back) ... ok
+test_inventory_failure_stops_without_selecting_a_container (test_mobile_selection.SelectionTests.test_inventory_failure_stops_without_selecting_a_container) ... ok
+test_legacy_installation_stays_on_its_existing_rootfs (test_mobile_selection.SelectionTests.test_legacy_installation_stays_on_its_existing_rootfs) ... ok
+test_multiple_collisions_select_an_unused_name (test_mobile_selection.SelectionTests.test_multiple_collisions_select_an_unused_name) ... ok
+test_owned_interrupted_install_is_reused (test_mobile_selection.SelectionTests.test_owned_interrupted_install_is_reused) ... ok
+test_runtime_backup_uses_saved_name (test_mobile_selection.SelectionTests.test_runtime_backup_uses_saved_name) ... ok
+test_saved_owned_name_takes_priority_over_free_default (test_mobile_selection.SelectionTests.test_saved_owned_name_takes_priority_over_free_default) ... ok
+test_uninstall_requires_confirmation_for_the_selected_name (test_mobile_selection.SelectionTests.test_uninstall_requires_confirmation_for_the_selected_name) ... ok
+test_unowned_novaos_is_preserved_and_lite_is_selected (test_mobile_selection.SelectionTests.test_unowned_novaos_is_preserved_and_lite_is_selected) ... ok
+test_every_manifest_asset_exists_and_matches_hash (test_music.AlbumTests.test_every_manifest_asset_exists_and_matches_hash) ... ok
+test_atomic_state_round_trip_and_file_mode (test_music.PersistenceTests.test_atomic_state_round_trip_and_file_mode) ... ok
+test_corrupt_or_deleted_library_recovers (test_music.PersistenceTests.test_corrupt_or_deleted_library_recovers) ... ok
+test_untrusted_album_manifest_cannot_escape (test_music.PersistenceTests.test_untrusted_album_manifest_cannot_escape) ... ok
+test_album_repeat (test_music.PlaylistTests.test_album_repeat) ... ok
+test_duplicates_and_invalid_selection (test_music.PlaylistTests.test_duplicates_and_invalid_selection) ... ok
+test_empty_playlist_is_safe (test_music.PlaylistTests.test_empty_playlist_is_safe) ... ok
+test_manual_next_wraps_but_repeat_one_only_repeats_eos (test_music.PlaylistTests.test_manual_next_wraps_but_repeat_one_only_repeats_eos) ... ok
+test_sequential_eos_stops_without_repeat (test_music.PlaylistTests.test_sequential_eos_stops_without_repeat) ... ok
+test_shuffle_repeat_album_restarts (test_music.PlaylistTests.test_shuffle_repeat_album_restarts) ... ok
+test_shuffle_visits_each_once_and_previous_uses_actual_history (test_music.PlaylistTests.test_shuffle_visits_each_once_and_previous_uses_actual_history) ... ok
+test_actual_wav_generation_metadata_and_checksum (test_music.SynthesisTests.test_actual_wav_generation_metadata_and_checksum) ... ok
+test_original_synth_is_deterministic_non_silent_bounded_and_fades (test_music.SynthesisTests.test_original_synth_is_deterministic_non_silent_bounded_and_fades) ... ok
+test_synthesis_rejects_unbounded_allocations (test_music.SynthesisTests.test_synthesis_rejects_unbounded_allocations) ... ok
+test_album_not_in_core_package (test_packaging.DebianPayloadTests.test_album_not_in_core_package) ... ok
+test_control_dependencies_and_config_preservation (test_packaging.DebianPayloadTests.test_control_dependencies_and_config_preservation) ... ok
+test_debian_archive_and_installed_files (test_packaging.DebianPayloadTests.test_debian_archive_and_installed_files) ... ok
+test_invalid_version_rejected_before_staging (test_packaging.PackagingInputsTests.test_invalid_version_rejected_before_staging) ... ok
+test_iso_invalid_edition_rejected_without_tools_or_root (test_packaging.PackagingInputsTests.test_iso_invalid_edition_rejected_without_tools_or_root) ... ok
+test_package_lists_valid_and_shared_list_has_no_boot_services (test_packaging.PackagingInputsTests.test_package_lists_valid_and_shared_list_has_no_boot_services) ... ok
+test_shell_syntax (test_packaging.PackagingInputsTests.test_shell_syntax) ... ok
+test_staging_update_preserves_user_data_and_modes (test_system_install.SystemInstallerTests.test_staging_update_preserves_user_data_and_modes) ... ok
+test_unknown_argument_does_not_install (test_system_install.SystemInstallerTests.test_unknown_argument_does_not_install) ... ok
+test_explicit_reset_makes_new_backup (test_theme.ThemeTests.test_explicit_reset_makes_new_backup) ... ok
+test_first_run_sets_real_plugins_launchers_and_backup (test_theme.ThemeTests.test_first_run_sets_real_plugins_launchers_and_backup) ... ok
+test_fresh_profile_discovers_real_monitor_connector (test_theme.ThemeTests.test_fresh_profile_discovers_real_monitor_connector) ... ok
+test_generator_is_deterministic (test_theme.ThemeTests.test_generator_is_deterministic) ... ok
+test_panel_shutdown_is_bounded (test_theme.ThemeTests.test_panel_shutdown_is_bounded) ... ok
+test_portrait_uses_mobile_wallpaper (test_theme.ThemeTests.test_portrait_uses_mobile_wallpaper) ... ok
+test_rejects_invalid_args_without_modification (test_theme.ThemeTests.test_rejects_invalid_args_without_modification) ... ok
+test_requires_real_session (test_theme.ThemeTests.test_requires_real_session) ... ok
+test_second_run_preserves_custom_layout (test_theme.ThemeTests.test_second_run_preserves_custom_layout) ... ok
+test_static_art_and_icons_are_valid_original_svg (test_theme.ThemeTests.test_static_art_and_icons_are_valid_original_svg) ... ok
+test_archive_includes_real_backend_switch_and_fetch_assets (test_visual_update.VisualUpdateTests.test_archive_includes_real_backend_switch_and_fetch_assets) ... ok
+test_corrupt_download_never_runs_installer (test_visual_update.VisualUpdateTests.test_corrupt_download_never_runs_installer) ... ok
+test_public_loader_checksum_matches_generated_script (test_visual_update.VisualUpdateTests.test_public_loader_checksum_matches_generated_script) ... ok
+
+----------------------------------------------------------------------
+Ran 77 tests in 47.012s
+
+OK
+A restauração substitui todo o ambiente novaos, incluindo /home/nova.
+Isto apaga o Debian NovaOS e todos os arquivos de /home/nova. Faça backup antes.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Sessão encerrada; seus arquivos permanecem em /home/nova.
+Backup: /tmp/novaos-selection-95los9db/backup.tar.gz
+SHA256: 2aaccfc5397c90d801a55ad11b91ed993ca87e86fcd8f13f6072be7ad30aeace
+Isto apaga o Debian NovaOS e todos os arquivos de /home/nova. Faça backup antes.

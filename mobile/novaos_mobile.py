@@ -161,6 +161,29 @@ class Mobile:
         data = self.read()
         return alive(data.get("supervisor")) and data.get("phase") == "running"
 
+    def desktop(self, selection=None):
+        path = self.state/'preferences.json'
+        try:
+            preferences = json.loads(path.read_text())
+            if not isinstance(preferences, dict):
+                raise ValueError('Invalid preferences')
+        except FileNotFoundError:
+            preferences = {}
+        if selection is not None:
+            if selection not in ('xfce', 'plasma'):
+                raise ValueError('Escolha xfce ou plasma')
+            with self.lock():
+                self.require_stopped()
+                preferences['desktop'] = selection
+                temporary = path.with_suffix('.tmp')
+                temporary.write_text(json.dumps(preferences)+'\n')
+                temporary.chmod(0o600)
+                temporary.replace(path)
+        selected = preferences.get('desktop', 'xfce')
+        if selected not in ('xfce', 'plasma'):
+            raise RuntimeError('Desktop inválido em preferences.json')
+        return selected
+
     def require_termux(self):
         if not str(self.prefix).startswith("/data/") or not shutil.which("termux-x11"):
             raise RuntimeError("Execute no Termux após mobile/install-termux.sh")
@@ -249,7 +272,7 @@ class Mobile:
         signal.signal(signal.SIGTERM, lambda *_: stop_event.set())
         signal.signal(signal.SIGINT, lambda *_: stop_event.set())
         data = {"phase": "starting", "supervisor": process_identity(os.getpid()),
-                "children": {}, "display": display, "started": time.time()}
+                "children": {}, "display": display, "started": time.time(), "desktop": self.desktop()}
         self.write(data)
         children = []
 
@@ -303,10 +326,10 @@ class Mobile:
             guest_runtime = f"/tmp/{self.runtime.name}"
             guest = launch("desktop", ["proot-distro", "login", self.alias, "--user", "nova", "--isolated", "--shared-tmp", "--",
                 "/usr/bin/env", f"DISPLAY=:{display}", f"XAUTHORITY={guest_runtime}/Xauthority",
-                f"PULSE_SERVER=unix:{guest_runtime}/pulse/native", "NOVAOS_MOBILE=1", "/usr/local/libexec/novaos-mobile-session"])
+                f"PULSE_SERVER=unix:{guest_runtime}/pulse/native", "NOVAOS_MOBILE=1", "/usr/local/libexec/novaos-mobile-session", data['desktop']])
             # An immediate missing desktop/permission error should not appear as success.
             if stop_event.wait(2) or guest.poll() is not None:
-                raise RuntimeError("A sessão XFCE terminou durante a inicialização")
+                raise RuntimeError("A sessão gráfica terminou durante a inicialização")
             data["phase"] = "running"
             self.write(data)
             while not stop_event.wait(1):
@@ -388,7 +411,7 @@ class Mobile:
         print("Ambiente removido. Termux, Termux:X11, fontes e backups foram preservados.")
 
     def doctor(self):
-        report = {"architecture": os.uname().machine, "prefix": str(self.prefix), "container": self.alias,
+        report = {"architecture": os.uname().machine, "prefix": str(self.prefix), "container": self.alias, "desktop": self.desktop(),
                   "free_gib": round(shutil.disk_usage(self.prefix).free / 1024**3, 2),
                   "state": self.read(), "tools": {x: bool(shutil.which(x)) for x in
                   ("proot-distro", "termux-x11", "pulseaudio", "xauth")}}
@@ -411,6 +434,8 @@ def main(argv=None):
         item.add_argument("archive")
     item = sub.add_parser("shell")
     item.add_argument("--root", action="store_true", help="root emulado apenas dentro do Debian")
+    item = sub.add_parser('desktop')
+    item.add_argument('selection', nargs='?', choices=('xfce', 'plasma'))
     args = parser.parse_args(argv)
     try:
         app = Mobile()
@@ -443,6 +468,8 @@ def main(argv=None):
             app.uninstall()
         elif args.command == "shell":
             subprocess.run(["proot-distro", "login", app.alias, "--user", "root" if args.root else "nova"], check=True)
+        elif args.command == 'desktop':
+            print(app.desktop(args.selection))
         return 0
     except (OSError, RuntimeError, ValueError, subprocess.CalledProcessError, EOFError) as error:
         print(f"NovaOS: {error}", file=sys.stderr)

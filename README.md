@@ -163,3 +163,19 @@ bash NovaOS/publish-github.sh
 No primeiro uso, siga o código de login informado pelo `gh auth login` no navegador. Ao fim, a saída deve trazer o URL real do GitHub. **Somente considere publicado quando o comando confirmar sucesso.**
 
 Depois execute `bash install.sh` a partir da pasta Git para instalar sua cópia gerenciada com `.git`. A partir daí, `novaos update` buscará atualizações via `git pull --ff-only` na cópia gerenciada, se o remoto continuar acessível. Fazer o push da versão inicial não cria automaticamente novos commits; atualizações futuras precisam ser publicadas no repositório.
+
+## NovaOS Full ISO para VM x86_64
+
+A versão **NovaOS Full** é uma ISO Live real baseada em Debian 13 amd64,
+com kernel Linux e sessão gráfica própria (LightDM + Openbox + NovaShell GTK3).
+É independente de Termux e PRoot.
+
+**Construir pelo celular:** acesse [Actions — NovaOS Full ISO](https://github.com/Hhhaofuqoc/novaos/actions/workflows/novaos-full-iso.yml)
+e use **Run workflow**. Uma execução bem-sucedida anexará o artefato
+`NovaOS-v1.0-Full-amd64`, contendo a ISO e o SHA256. Se o build falhar,
+nenhuma ISO deve ser considerada pronta. Há também um teste QEMU que gera
+uma captura real da VM.
+
+**Limitações:** a ISO é Live (não instala automaticamente em disco) e os
+runners do GitHub Actions são temporários — não oferecem uma VM interativa
+permanente. Consulte [o guia ISO Full](iso/full/README.md).

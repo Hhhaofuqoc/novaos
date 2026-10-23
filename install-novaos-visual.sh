@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+archive_url=https://raw.githubusercontent.com/Hhhaofuqoc/novaos/novaos-visual-v1/novaos-visual-update.tar.gz
+archive_sha256=56570c136206a192ada0598ad47ae586298c80ac1fc36b1432d4d443aa9bd424
+mode=${1:---fetch-only}
+case $mode in --plasma|--fetch-only|--download-only) ;; *) echo 'Use --plasma, --fetch-only ou --download-only.' >&2; exit 2;; esac
+(( $# <= 1 )) || exit 2
+if [[ $mode != --download-only ]]; then
+  [[ -n ${PREFIX:-} && -x $PREFIX/bin/pkg ]] || { echo 'Execute no Termux, fora do Debian.' >&2; exit 1; }
+fi
+work=$(mktemp -d "${TMPDIR:-/tmp}/novaos-visual.XXXXXXXX")
+trap 'rm -rf -- "$work"' EXIT
+curl --fail --show-error --location --proto '=https' --proto-redir '=https' --retry 3 \
+  --output "$work/update.tar.gz" "$archive_url"
+printf '%s  %s\n' "$archive_sha256" "$work/update.tar.gz" | sha256sum --check --strict -
+tar --no-same-owner -xzf "$work/update.tar.gz" -C "$work"
+payload="$work/novaos-visual-update"
+(cd "$payload" && sha256sum --check --strict SHA256SUMS)
+if [[ $mode == --download-only ]]; then printf 'Atualização verificada.\n'; exit 0; fi
+# Use the existing registry; never select or modify another PRoot environment.
+container=$(PYTHONPATH="$payload/mobile" python - <<'PY'
+from novaos_mobile import Mobile
+app=Mobile()
+app.require_stopped()
+print(app.alias)
+PY
+)
+if [[ $mode == --plasma ]]; then
+  free_kib=$(df -Pk "$PREFIX" | awk 'END {print $4}')
+  (( free_kib >= 3 * 1024 * 1024 )) || { echo 'Libere pelo menos 3 GiB para esta atualização.' >&2; exit 1; }
+fi
+proot-distro login "$container" -- /usr/bin/test -f /etc/novaos-mobile-owner || {
+  echo 'O ambiente registrado não pertence a esta edição; atualização cancelada.' >&2; exit 1;
+}
+proot-distro login "$container" --bind "$payload:/opt/novaos-visual-update" -- \
+  /bin/bash /opt/novaos-visual-update/installers/install-visual-update.sh "$mode"
+install -m 644 "$payload/mobile/novaos_mobile.py" "$HOME/.local/lib/novaos-mobile/novaos_mobile.py"
+if [[ $mode == --plasma ]]; then novaos-mobile desktop plasma; fi
+printf '\nAtualização concluída. Para abrir: novaos-mobile start\nNo desktop: novafetch\n'

@@ -49,6 +49,31 @@ start(){
   else
     log 'Servidor X11 existente detectado; será reutilizado e não será encerrado pelo NovaOS.'
   fi
+  # Um socket X11 presente nao garante que clientes no PRoot consigam
+  # conectar. Validar de verdade antes de iniciar widgets ou o Openbox.
+  : > "$LOG/display-check.log"
+  local reachable=0
+  for _ in 1 2 3; do
+    if proot-distro login novaos --shared-tmp --user nova -- \
+       env DISPLAY="$DISPLAY_NUM" /usr/bin/xdpyinfo \
+       > /dev/null 2>>"$LOG/display-check.log"; then
+      reachable=1
+      break
+    fi
+    sleep 1
+  done
+  if (( ! reachable )); then
+    log 'Nao foi possivel conectar ao display dentro do PRoot:'
+    tail -n 12 "$LOG/display-check.log" || true
+    error "Display $DISPLAY_NUM inacessivel ao usuario nova. Sem apagar locks/sockets: tente 'novaos stop' e 'NOVAOS_DISPLAY=:2 novaos start' no Termux."
+  fi
+  if proot-distro login novaos --shared-tmp --user nova -- \
+       env DISPLAY="$DISPLAY_NUM" /usr/bin/wmctrl -m \
+       > "$LOG/wm-check.log" 2>&1; then
+    log 'Este display ja tem gerenciador de janelas:'
+    head -n 4 "$LOG/wm-check.log" || true
+    error "Nao abrirei outro Openbox em $DISPLAY_NUM. Use um display vazio: NOVAOS_DISPLAY=:2 novaos start (ou :3)."
+  fi
   if command -v am >/dev/null; then am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity >/dev/null 2>&1 || true; fi
   if command -v pulseaudio >/dev/null; then
     pulseaudio --start --exit-idle-time=-1 >/dev/null 2>&1 || log 'PulseAudio não iniciou; a imagem continua utilizável sem áudio.'

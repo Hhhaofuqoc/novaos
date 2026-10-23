@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=NovaCenter
+Comment=Configurações da NovaOS
+Exec=/usr/local/bin/nova-settings
+Icon=/opt/novaos/app/assets/icons/settings.svg
+Categories=Settings;System;
+Terminal=false

@@ -1,0 +1,13 @@
+#!/bin/bash
+set +e
+purple='\033[1;35m'; blue='\033[1;36m'; clear='\033[0m'
+if command -v nova-logo >/dev/null 2>&1; then nova-logo; else python3 "$(dirname "$0")/nova-logo"; fi
+printf "${purple}NovaOS 1.0 | NovaShell${clear} — Base: "
+. /etc/os-release; echo "${PRETTY_NAME:-Linux}"
+printf 'Arquitetura: %s\n' "$(uname -m)"
+printf 'Kernel reportado por PRoot: %s\n' "$(uname -r)"
+printf 'Kernel Android (/proc/version): %s\n' "$(head -c 140 /proc/version 2>/dev/null || echo Indisponível)"
+printf 'Gerenciador de janelas: Openbox\nShell: %s\n' "${SHELL:-indisponível}"
+awk '/MemTotal/ {printf "RAM física reportada: %.2f GiB\n", $2/1048576}' /proc/meminfo 2>/dev/null
+df -h "$HOME" 2>/dev/null | tail -n 1 | awk '{print "Armazenamento (contêiner): livre=" $4 ", total=" $2}'
+echo 'Nota: carga de CPU e uptime podem ser mascarados pelo PRoot.'

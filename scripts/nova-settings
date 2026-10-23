@@ -1,0 +1,2 @@
+#!/bin/bash
+exec /usr/bin/python3 /opt/novaos/app/nova-shell/settings/app.py

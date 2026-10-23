@@ -1,0 +1,13 @@
+#!/bin/bash
+# N do NovaOS e informações genuínas coletadas por ferramentas instaladas.
+LOGO=/opt/novaos/app/assets/logos
+if command -v fastfetch >/dev/null 2>&1; then
+  exec fastfetch --logo "$LOGO/nova-fastfetch.txt" --logo-type file \
+     --logo-color-1 '#af55fb' --logo-color-2 '#6978ff' --logo-color-3 '#5bd5eb' "$@"
+elif command -v neofetch >/dev/null 2>&1; then
+  exec neofetch --ascii "$LOGO/nova-neofetch.txt" --ascii_colors 5 4 6 "$@"
+elif command -v screenfetch >/dev/null 2>&1; then
+  exec screenfetch -a /opt/novaos/app/config/fetch/screenfetch-logo.sh "$@"
+else
+  exec nova-info "$@"
+fi

@@ -145,3 +145,21 @@ Se a instalação existente usa uma base **sem APT**, `install.sh` interrompe an
 
 - [Termux:X11 oficial](https://github.com/termux/termux-x11): APK, `termux-x11-nightly`, flags, `--shared-tmp`.
 - [PRoot-Distro oficial](https://github.com/termux/proot-distro): `list`, `install --name`, `login --shared-tmp`, sessões.
+
+## Publicação e atualizações pelo GitHub (Termux)
+
+Este projeto inclui `publish-github.sh` para criar o repositório público **Hhhaofuqoc/NovaOS** e enviar os fontes pelo GitHub CLI oficial. Não usa token colado no chat, não dá `force push`, recusa um `origin` diferente e **não** modifica o contêiner existente. É necessário fazer login interativo no GitHub CLI no celular uma vez, pois a conexão do ChatGPT não autentica o terminal Termux.
+
+Depois de extrair o ZIP atualizado:
+
+```bash
+pkg install -y unzip
+termux-setup-storage
+mkdir -p ~/novaos-publish && cd ~/novaos-publish
+unzip -oq ~/storage/downloads/NovaOS-v1.0-github.zip
+bash NovaOS/publish-github.sh
+```
+
+No primeiro uso, siga o código de login informado pelo `gh auth login` no navegador. Ao fim, a saída deve trazer o URL real do GitHub. **Somente considere publicado quando o comando confirmar sucesso.**
+
+Depois execute `bash install.sh` a partir da pasta Git para instalar sua cópia gerenciada com `.git`. A partir daí, `novaos update` buscará atualizações via `git pull --ff-only` na cópia gerenciada, se o remoto continuar acessível. Fazer o push da versão inicial não cria automaticamente novos commits; atualizações futuras precisam ser publicadas no repositório.

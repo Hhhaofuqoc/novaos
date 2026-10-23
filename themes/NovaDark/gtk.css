@@ -1,0 +1,27 @@
+* { font-family: "DejaVu Sans", sans-serif; }
+window.nova, window.nova-menu, window.nova-settings {
+ background-color: #0b1020; color: #e9edff;
+}
+window.nova-menu { border: 1px solid #303e68; border-radius: 15px; }
+window.nova-settings { background: #101629; }
+box.nova-panel { background: #080d1a; border-bottom: 1px solid #273151; }
+box.nova-dock { background: #11182c; border: 1px solid #354069; border-radius: 18px; padding: 6px; }
+box.nova-sidebar { background: #0c1120; border: 1px solid #31395d; border-radius: 13px; }
+label { color: #e9eaff; }
+label.muted { color: #9eaaca; }
+label.heading { color: #fff; font-size: 16px; font-weight: bold; }
+label.brand { color: #ddd9ff; font-size: 14px; font-weight: bold; }
+button { color: #e5e8ff; background: transparent; border: 0; padding: 7px 10px; border-radius: 8px; box-shadow: none; }
+button:hover { background: #262b52; }
+button:active, button.suggested-action, button.active { background: #473b97; color: #fff; }
+button.app { padding: 10px 6px; }
+button.app:hover { background: #252b4c; }
+entry { background: #070c18; color: #fff; border: 1px solid #2c3654; border-radius: 9px; padding: 10px; }
+scrollbar slider { background: #4b458c; border-radius: 8px; min-width: 5px; }
+progressbar trough { background: #272c44; min-height: 7px; border-radius: 5px; }
+progressbar progress { background: #7f5cff; border-radius: 5px; }
+scale highlight { background: #a05aff; }
+frame { border: 1px solid #303755; border-radius: 9px; }
+calendar { background: #0d1427; color: #eee; }
+/* Elementos com estilo consistente, sem compositor obrigatório */
+label.brand { color: #f2efff; }

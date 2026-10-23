@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="NovaOS battery">
+ <defs><linearGradient id="primary" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#af55fb"/><stop offset="1" stop-color="#4b5ff9"/></linearGradient>
+ <linearGradient id="secondary" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#6978ff"/><stop offset="1" stop-color="#5bd5eb"/></linearGradient></defs>
+ <rect x="14" y="35" width="91" height="58" rx="9" fill="none" stroke="#93b8ff" stroke-width="7"/><rect x="107" y="54" width="9" height="20" rx="3"/><rect x="22" y="43" width="64" height="42" rx="4" fill="url(#secondary)"/>
+</svg>

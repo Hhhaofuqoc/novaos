@@ -1,0 +1,11 @@
+{
+  "logo": {
+    "type": "file",
+    "source": "/opt/novaos/app/assets/logos/nova-fastfetch.txt",
+    "color": {"1": "#af55fb", "2": "#6978ff", "3": "#5bd5eb"},
+    "padding": {"right": 3}
+  },
+  "display": {
+    "color": {"keys": "#af55fb", "title": "#5bd5eb"}
+  }
+}

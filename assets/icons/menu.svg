@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="NovaOS menu">
+ <defs><linearGradient id="primary" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#af55fb"/><stop offset="1" stop-color="#4b5ff9"/></linearGradient>
+ <linearGradient id="secondary" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#6978ff"/><stop offset="1" stop-color="#5bd5eb"/></linearGradient></defs>
+ <rect x="26" y="26" width="30" height="30" rx="8"/><rect x="72" y="26" width="30" height="30" rx="8"/><rect x="26" y="72" width="30" height="30" rx="8"/><rect x="72" y="72" width="30" height="30" rx="8"/>
+</svg>

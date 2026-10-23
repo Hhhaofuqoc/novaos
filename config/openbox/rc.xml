@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_config xmlns="http://openbox.org/3.4/rc">
+  <resistance><strength>10</strength><screen_edge_strength>20</screen_edge_strength></resistance>
+  <focus><focusNew>yes</focusNew><followMouse>no</followMouse><raiseOnFocus>no</raiseOnFocus></focus>
+  <placement><policy>Smart</policy><center>yes</center></placement>
+  <theme><name>Onyx</name><titleLayout>NLIMC</titleLayout><keepBorder>yes</keepBorder></theme>
+  <desktops><number>4</number><firstdesk>1</firstdesk><names><name>1</name><name>2</name><name>3</name><name>4</name></names></desktops>
+  <margins><top>42</top><bottom>78</bottom><left>0</left><right>0</right></margins>
+  <keyboard>
+    <keybind key="A-F4"><action name="Close"/></keybind>
+    <keybind key="W-Tab"><action name="NextWindow"/></keybind>
+    <keybind key="W-1"><action name="GoToDesktop"><to>1</to></action></keybind>
+    <keybind key="W-2"><action name="GoToDesktop"><to>2</to></action></keybind>
+    <keybind key="W-3"><action name="GoToDesktop"><to>3</to></action></keybind>
+    <keybind key="W-4"><action name="GoToDesktop"><to>4</to></action></keybind>
+  </keyboard>
+  <mouse><doubleClickTime>350</doubleClickTime></mouse>
+</openbox_config>

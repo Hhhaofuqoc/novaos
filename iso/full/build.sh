@@ -11,7 +11,7 @@ apt-get update
 apt-get install -y --no-install-recommends \
   ca-certificates live-build debootstrap xorriso squashfs-tools \
   syslinux-common isolinux grub-pc-bin grub-efi-amd64-bin \
-  mtools dosfstools git tar curl gpg
+  mtools dosfstools git tar curl gpg file
 BUILD="$ROOT/.build/novaos-full-amd64"
 OUT="$ROOT/dist"
 mkdir -p "$BUILD" "$OUT"

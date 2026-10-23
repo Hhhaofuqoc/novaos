@@ -26,13 +26,13 @@ o Android solicitar. Não conceda root, acessibilidade ou acesso a contatos.
 
 ### Instalação automática com um comando
 
-No Termux, este comando baixa o instalador e seu checksum da release Mobile Lite,
+No Termux, este comando baixa o instalador e seu checksum da branch de downloads Mobile Lite,
 confere o script e então executa. O instalador baixa o pacote completo de cerca
 de 35 MiB, verifica o SHA-256 fixado no script e o manifesto interno, extrai em
 uma pasta nova na home e instala as dependências:
 
 ```bash
-curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://github.com/Hhhaofuqoc/novaos/releases/download/v0.1.0-mobile-lite/{install-novaos.sh,install-novaos.sh.sha256}' && sha256sum -c install-novaos.sh.sha256 && bash install-novaos.sh
+curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v0.1.0/{install-novaos.sh,install-novaos.sh.sha256}' && sha256sum -c install-novaos.sh.sha256 && bash install-novaos.sh
 ```
 
 Depois execute `novaos-mobile start`. O aplicativo Android Termux:X11 continua

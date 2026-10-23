@@ -12,7 +12,7 @@ Instalação automática no Termux, depois de instalar os aplicativos Android
 Termux e Termux:X11 oficiais:
 
 ```bash
-curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://github.com/Hhhaofuqoc/novaos/releases/download/v0.1.0-mobile-lite/{install-novaos.sh,install-novaos.sh.sha256}' && sha256sum -c install-novaos.sh.sha256 && bash install-novaos.sh
+curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v0.1.0/{install-novaos.sh,install-novaos.sh.sha256}' && sha256sum -c install-novaos.sh.sha256 && bash install-novaos.sh
 novaos-mobile start
 ```
 

@@ -37,7 +37,7 @@ jobs:
       - name: Build packages and verified downloader
         env:
           RELEASE_TAG: ${{ inputs.tag }}
-        run: NOVAOS_DOWNLOAD_BASE_URL="https://github.com/$GITHUB_REPOSITORY/releases/download/$RELEASE_TAG" bash scripts/release.sh
+        run: bash scripts/release.sh
       - name: Verify checksums
         run: cd dist && sha256sum -c SHA256SUMS
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

@@ -3,8 +3,8 @@
 set -euo pipefail
 umask 077
 version=0.1.0
-archive_url=https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v0.1.0/novaos-0.1.0-mobile.tar.gz
-archive_sha256=f9b4fa72ee34538f4324e11a66920569541f923613023756976b3e5203373076
+archive_url=https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v0.1.0-fix1/novaos-0.1.0-mobile.tar.gz
+archive_sha256=19f797fdafbc59a0d5d97c89e05440e68963c7b9feb5b6cfe3521db8b7b8122a
 download_only=false
 case ${1:-} in
   --download-only) download_only=true ;;

@@ -33,11 +33,7 @@ printf 'A instalação usa rede e preserva os arquivos existentes do NovaOS.\n'
 pkg update
 pkg install -y x11-repo
 pkg install -y proot-distro pulseaudio termux-x11-nightly xorg-xauth python util-linux
-PROOT_HELP=$(proot-distro install --help)
-[[ $PROOT_HELP == *--name* ]] || {
-  echo 'Atualize proot-distro para v5: pkg upgrade proot-distro. Esta versão usa OCI com digest verificado.' >&2
-  exit 1
-}
+bash "$ROOT/mobile/check-proot.sh"
 STATE="$HOME/.local/state/novaos-mobile"
 mkdir -p "$STATE"
 chmod 700 "$STATE"

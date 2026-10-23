@@ -100,3 +100,12 @@ saída de áudio física, toque, suspensão/recuperação Android, restauração
 real, boot BIOS/UEFI de ISO e instalador Desktop. GitHub Actions foi configurado;
 esta matriz registra os testes locais executados, não um resultado de workflow remoto.
 Não há ISO nem APK NovaOS fabricado nesta entrega.
+
+## Correção Mobile fix1
+
+O PRoot-Distro 5.10.2 escreve `install --help` em stderr, mesmo com saída de
+sucesso. A instalação original lia apenas stdout e rejeitava incorretamente
+essa versão. `mobile/check-proot.sh` agora captura ambos os canais e distingue
+falha do comando de ausência da opção `--name`. Quatro testes de regressão
+passaram, incluindo a reprodução do formato de saída informado no Android.
+A correção não remove o rootfs nem exige atualizar um PRoot-Distro já compatível.

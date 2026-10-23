@@ -38,7 +38,7 @@ O instalador de sistema é a única fonte da estrutura do pacote.
 
 O downloader é gerado **depois** do arquivo Mobile para não criar uma dependência
 circular entre os hashes. `NOVAOS_DOWNLOAD_BASE_URL` permite apontar uma release
-HTTPS diferente; o padrão é a branch pública de downloads `mobile-lite-downloads-v0.1.0` do repositório NovaOS.
+HTTPS diferente; o padrão é a branch pública de downloads `mobile-lite-downloads-v0.1.0-fix1` do repositório NovaOS.
 Sua origem é `mobile/bootstrap-termux.sh.in`, com geração por
 `scripts/build-bootstrap.py`. Ele preserva os fontes numa pasta nova e remove
 o download temporário ao terminar. Falhas de rede ou checksum não executam a

@@ -12,7 +12,16 @@ trap 'say "Instalação interrompida na linha $LINENO. Consulte $LOGDIR/install.
 [[ "$(uname -m)" == aarch64 ]] || fail "Requer aarch64, encontrado $(uname -m)."
 free_kb="$(df -Pk "$HOME" | awk 'END {print $4}')"
 [[ "$free_kb" =~ ^[0-9]+$ ]] || fail 'Não foi possível medir o armazenamento livre.'
-if ((free_kb < 9 * 1024 * 1024)); then fail 'Menos de 9 GiB livres: instalação recusada (previsão de até 5 GiB + reserva de 4 GiB).'; fi
+if [[ -d "$APPDIR/nova-shell" ]]; then
+  if ((free_kb < 4 * 1024 * 1024)); then
+    fail 'Menos de 4 GiB livres: atualização interrompida para proteger o armazenamento.'
+  fi
+  if ((free_kb < 9 * 1024 * 1024)); then
+    say 'Atualização de instalação existente: menos de 9 GiB livres, preservando arquivos. Verifique o espaço após o APT.'
+  fi
+elif ((free_kb < 9 * 1024 * 1024)); then
+  fail 'Menos de 9 GiB livres: primeira instalação recusada (previsão de até 5 GiB + reserva de 4 GiB).'
+fi
 say "Livre: $((free_kb / 1024)) MiB. Previsão típica: 2–5 GiB; limite não garantido."
 command -v pkg >/dev/null || fail 'Gerenciador pkg não encontrado.'
 say 'Instalando dependências do Termux, sem remover pacotes existentes...'

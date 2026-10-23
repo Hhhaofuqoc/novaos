@@ -37,7 +37,11 @@ fi
 mkdir -p "$APPDIR"
 if [[ "$ROOT" != "$APPDIR" ]]; then
   say 'Copiando projeto local para a instalação gerenciada (sem modificar o diretório original).'
-  cp -a "$ROOT/." "$APPDIR/"
+  # O historico do Git fica somente no repositorio fonte. Copiar .git pode
+  # falhar em objects/pack protegidos e nao e necessario para executar a NovaOS.
+  # Nao apaga instalacoes anteriores nem arquivos pessoais do container.
+  command -v tar >/dev/null 2>&1 || fail 'Ferramenta tar ausente no Termux.'
+  tar -C "$ROOT" --exclude='./.git' --exclude='.git' -cf - . | tar -C "$APPDIR" -xf -
 fi
 if proot-distro list --quiet 2>/dev/null | grep -Fxq novaos; then
   say 'Contêiner novaos existente detectado: será preservado.'

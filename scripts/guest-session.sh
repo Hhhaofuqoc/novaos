@@ -26,7 +26,7 @@ sleep .35
 if ! kill -0 "${children[${#children[@]}-1]}" 2>/dev/null; then echo 'Openbox encerrou. Leia openbox.log.' >&2; exit 1; fi
 xsetroot -solid '#090d1b' >/dev/null 2>&1 || true
 if command -v feh >/dev/null; then
-  wallpaper="$(python3 - "$APP/assets/wallpapers/nova-night.webp" <<'PY'
+  wallpaper="$(/usr/bin/python3 - "$APP/assets/wallpapers/nova-night.webp" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -42,7 +42,7 @@ PY
   [ -f "$wallpaper" ] && feh --no-fehbg --bg-fill "$wallpaper" >>"$STATE/wallpaper.log" 2>&1 || true
 fi
 echo "[NovaOS] Iniciando NovaShell em DISPLAY=${DISPLAY:-indefinido}" >>"$STATE/novashell.log"
-python3 -u "$APP/nova-shell/main.py" >>"$STATE/novashell.log" 2>&1 &
+/usr/bin/python3 -u "$APP/nova-shell/main.py" >>"$STATE/novashell.log" 2>&1 &
 shell_pid=$!
 children+=("$shell_pid")
 if wait "$shell_pid"; then

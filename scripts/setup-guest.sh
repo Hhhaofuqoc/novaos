@@ -39,7 +39,9 @@ elif [ -e "$DEST" ]; then
   exit 1
 fi
 mkdir -p "$DEST"
-cp -a "$SRC/." "$DEST/"
+# Reaproveitar codigo e assets, sem transportar metadados Git protegidos
+# que possam ter permanecido numa instalacao interrompida no Termux.
+tar -C "$SRC" --exclude='./.git' --exclude='.git' -cf - . | tar -C "$DEST" -xf -
 touch "$DEST/.novaos-owned"
 chmod 755 "$DEST/scripts/guest-session.sh" "$DEST/scripts/guest-diag.sh"
 install -m 755 "$DEST/scripts/nova-info" /usr/local/bin/nova-info

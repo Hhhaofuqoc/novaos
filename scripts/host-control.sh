@@ -101,7 +101,18 @@ case "${1:-start}" in
   repair) repair;;
   update) bash "$APPDIR/update.sh";;
   status) check;;
-  logs) tail -n 70 "$LOG/session.log" 2>/dev/null || true;;
+  logs)
+    echo '=== Termux: sessão NovaOS ==='
+    tail -n 70 "$LOG/session.log" 2>/dev/null || echo 'Sem log de sessão no Termux.'
+    echo '=== Linux PRoot: NovaShell / Openbox / wallpaper ==='
+    proot-distro login novaos --shared-tmp --user nova -- /bin/bash -c '
+      d="$HOME/.local/state/novaos/logs"
+      for name in novashell openbox wallpaper; do
+        echo "--- $name.log ---"
+        if [[ -f "$d/$name.log" ]]; then tail -n 80 "$d/$name.log"; else echo "(arquivo ainda inexistente)"; fi
+      done
+    ' || true
+    ;;
   help|-h|--help) printf 'NovaOS: novaos [start|stop|restart|lite|full|repair|update|status|logs]\n';;
   *) error "Comando desconhecido: $1";;
 esac

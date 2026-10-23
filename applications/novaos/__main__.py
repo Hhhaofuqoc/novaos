@@ -19,6 +19,9 @@ def main(argv=None):
     subs.add_parser("session-init").add_argument("--once", action="store_true")
     # Keep GApplication's player control options intact.
     args_list = list(sys.argv[1:] if argv is None else argv)
+    if args_list and args_list[0] == "widgets":
+        from .desktop_widgets import main as widgets_main
+        return widgets_main(args_list[1:])
     if args_list and args_list[0] == "fetch":
         try:
             return subprocess.call(["novafetch", *args_list[1:]])
@@ -30,6 +33,7 @@ def main(argv=None):
         return music_main(args_list[1:])
     subs.add_parser("music", help="Player local; novaos music --help")
     subs.add_parser("fetch", help="Informações reais com identidade NovaOS")
+    subs.add_parser("widgets", help="Widgets nativos de sistema, rede e NovaMusic")
     args = parser.parse_args(args_list)
     from . import system
     try:

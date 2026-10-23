@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=NovaOS Desktop Widgets
+Comment=Real system, network and local music cards
+Exec=novaos widgets
+TryExec=novaos
+OnlyShowIn=KDE;
+Terminal=false
+X-GNOME-Autostart-enabled=true

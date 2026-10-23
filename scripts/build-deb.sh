@@ -39,7 +39,7 @@ Section: x11
 Priority: optional
 Architecture: all
 Maintainer: NovaOS Contributors <maintainers@novaos.invalid>
-Depends: python3 (>= 3.11), python3-gi, python3-psutil, fastfetch, gir1.2-gtk-3.0, gir1.2-gstreamer-1.0, gir1.2-gst-plugins-base-1.0, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-pulseaudio, librsvg2-common, dbus-x11, xdg-utils
+Depends: python3 (>= 3.11), python3-gi, python3-psutil, python3-gi-cairo, fastfetch, gir1.2-gtk-3.0, gir1.2-gstreamer-1.0, gir1.2-gst-plugins-base-1.0, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-pulseaudio, librsvg2-common, dbus-x11, xdg-utils
 Recommends: novaos-music, xfce4-session, xfce4-panel, xfdesktop4, xfwm4, xfce4-settings, xfconf, xfce4-terminal, thunar, mousepad, firefox-esr, xfce4-taskmanager, xfce4-appfinder, xfce4-notifyd, xfce4-pulseaudio-plugin, fonts-dejavu-core, adwaita-icon-theme, pulseaudio-utils
 Description: NovaOS native applications and Synthwave Linux Experience
  Your universe. Your system. Native GTK applications, XFCE theme,

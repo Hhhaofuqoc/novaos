@@ -10,3 +10,5 @@ breeze-icon-theme
 kde-style-breeze
 plasma-pa
 libglib2.0-bin
+python3-gi-cairo
+locales

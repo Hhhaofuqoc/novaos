@@ -10,3 +10,4 @@ systemsettings
 dolphin
 konsole
 kate
+python3-gi-cairo

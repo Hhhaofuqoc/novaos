@@ -1,10 +1,10 @@
 {
   "logo": {
     "type": "data",
-    "source": "$1          .:------:.\n$1       .-'          '-.\n$1     .'    .::::::.    '.\n$1    /    .::::::::::.   \\\n$2  _/____$1::::::::::::::$2___\\_\n$2 /  _.-'$1::::::::::::::$2'-.  \\\n$2 \\-'    $1'::::::::::' $2   '-/\n$1    \\      '::::'      /\n$1     '.              .'\n$1       '-.________.-'\n\n$2       ██╗    ██╗\n$2       ███╗   ██║\n$1       ██╚█╗  ██║\n$1       ██║╚█╗ ██║\n$1       ██║ ╚████║\n$2       ╚═╝  ╚═══╝\n\n$1        N O V A O S\n$2     YOUR UNIVERSE.\n$2      YOUR SYSTEM.",
+    "source": "$2███                  ███\n$2█████                ███\n$2██████               ███\n$2███  ███             ███\n$1███   ███            ███\n$1███     ███          ███\n$1███       ███        ███\n$1███        ███       ███\n$1███          ███     ███\n$1███            ███   ███\n$1███             ███  ███\n$1███               ██████\n$1███                █████\n$1███                  ███\n\n$1     N O V A O S",
     "color": {
-      "1": "38;2;160;32;240",
-      "2": "38;2;0;223;255"
+      "1": "38;2;139;92;246",
+      "2": "38;2;89;119;255"
     },
     "padding": {
       "top": 1,
@@ -14,7 +14,7 @@
   "display": {
     "separator": "  ",
     "color": {
-      "keys": "38;2;0;223;255",
+      "keys": "38;2;110;150;255",
       "title": "38;2;237;230;255",
       "output": "38;2;237;230;255"
     },
@@ -26,103 +26,103 @@
   "modules": [
     {
       "type": "custom",
-      "format": "{#38;2;160;32;240}╭─ {#1;38;2;0;223;255}NOVAOS{#38;2;160;32;240} ──────────────────{#}"
+      "format": "{#38;2;139;92;246}╭─ {#1;38;2;110;150;255}NOVAOS{#38;2;139;92;246} ──────────────────{#}"
     },
     {
       "type": "title",
       "key": "│ User",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "format": "{user-name}@{host-name}"
     },
     {
       "type": "os",
       "key": "│ Base",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "format": "{name} {version-id} / {arch}"
     },
     {
       "type": "kernel",
       "key": "│ Kernel",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "format": "{release}"
     },
     {
       "type": "uptime",
       "key": "│ Uptime",
-      "keyColor": "38;2;0;223;255"
+      "keyColor": "38;2;110;150;255"
     },
     {
       "type": "packages",
       "key": "│ Packages",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "format": "{all}"
     },
     {
       "type": "custom",
-      "format": "{#38;2;160;32;240}├─ DESKTOP ─────────────────{#}"
+      "format": "{#38;2;139;92;246}├─ DESKTOP ─────────────────{#}"
     },
     {
       "type": "de",
       "key": "│ Desktop",
-      "keyColor": "38;2;0;223;255"
+      "keyColor": "38;2;110;150;255"
     },
     {
       "type": "wm",
       "key": "│ Window mgr",
-      "keyColor": "38;2;0;223;255"
+      "keyColor": "38;2;110;150;255"
     },
     {
       "type": "theme",
       "key": "│ Theme",
-      "keyColor": "38;2;0;223;255"
+      "keyColor": "38;2;110;150;255"
     },
     {
       "type": "terminal",
       "key": "│ Terminal",
-      "keyColor": "38;2;0;223;255"
+      "keyColor": "38;2;110;150;255"
     },
     {
       "type": "shell",
       "key": "│ Shell",
-      "keyColor": "38;2;0;223;255"
+      "keyColor": "38;2;110;150;255"
     },
     {
       "type": "custom",
-      "format": "{#38;2;160;32;240}├─ HARDWARE ─────────────────{#}"
+      "format": "{#38;2;139;92;246}├─ HARDWARE ─────────────────{#}"
     },
     {
       "type": "cpu",
       "key": "│ CPU",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "format": "{name}"
     },
     {
       "type": "gpu",
       "key": "│ GPU",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "format": "{name}"
     },
     {
       "type": "memory",
       "key": "│ RAM / host",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "format": "{used} / {total} ({percentage})"
     },
     {
       "type": "disk",
       "key": "│ Disk /",
-      "keyColor": "38;2;0;223;255",
+      "keyColor": "38;2;110;150;255",
       "folders": "/",
       "format": "{size-used} / {size-total} ({size-percentage})"
     },
     {
       "type": "battery",
       "key": "│ Battery",
-      "keyColor": "38;2;0;223;255"
+      "keyColor": "38;2;110;150;255"
     },
     {
       "type": "custom",
-      "format": "{#38;2;160;32;240}╰────────────────────────────{#}"
+      "format": "{#38;2;139;92;246}╰────────────────────────────{#}"
     },
     {
       "type": "custom",

@@ -3,6 +3,8 @@
 Atualização para um **NovaOS Mobile já instalado**. O XFCE permanece disponível.
 O Plasma usa o mesmo Debian e os mesmos arquivos, com KWin X11, Konsole, Dolphin,
 painéis flutuantes, dock, tema roxo/ciano e wallpaper original NovaOS.
+O atualizador v2 aplica o [visual Night Room](NIGHT-ROOM.md) inspirado na imagem
+fornecida: quarto noturno, barra superior escura e widgets à direita.
 Continua sendo PRoot no Android, sem root e sem systemd de usuário.
 
 ## Instalar pelo Termux
@@ -11,7 +13,7 @@ Salve os arquivos abertos. Execute **fora do Debian**, no Termux:
 
 ```bash
 novaos-mobile stop
-curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://raw.githubusercontent.com/Hhhaofuqoc/novaos/novaos-visual-v1/{install-novaos-visual.sh,install-novaos-visual.sh.sha256}' && sha256sum -c install-novaos-visual.sh.sha256 && bash install-novaos-visual.sh --plasma
+curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://raw.githubusercontent.com/Hhhaofuqoc/novaos/novaos-visual-v2/{install-novaos-visual.sh,install-novaos-visual.sh.sha256}' && sha256sum -c install-novaos-visual.sh.sha256 && bash install-novaos-visual.sh --plasma
 novaos-mobile start
 ```
 
@@ -39,7 +41,7 @@ novaos fetch
 
 `novafetch` escolhe o formato pela largura do terminal. O comando `fastfetch`
 também recebe configuração NovaOS, compacta por padrão. Há uma identidade própria:
-planeta com anéis, monograma, cores neon e blocos de sistema/desktop/hardware.
+monograma N roxo/azul e blocos de sistema/desktop/hardware.
 Não usa logo ou arquivos do CachyOS.
 
 As leituras são do Fastfetch instalado pelo Debian. A base continua identificada
@@ -76,10 +78,10 @@ Não instalamos SDDM, NetworkManager ou um serviço de energia para controlar o 
 O bloqueio automático do Plasma é desativado: a conta Linux não substitui a tela
 de bloqueio Android. Não use o bloqueio manual KDE para proteger o aparelho.
 
-Validação executada: 77 testes unitários/lifecycle, shellcheck, Fastfetch 2.40.4
+Validação executada: 80 testes unitários/lifecycle, shellcheck, Fastfetch 2.40.4
 real e boot Plasma 6.3.6 em Debian x86_64/Xvfb. O teste verifica KWin, configuração
 dos painéis/wallpaper e abre Konsole com NovaFetch. A captura é de uma sessão real.
-Uma amostra de 4 segundos mediu cerca de 0,25% de um núcleo para os processos
+Na integração inicial v1, uma amostra de 4 segundos mediu cerca de 0,25% de um núcleo para os processos
 monitorados no ambiente cloud. Isso não prevê desempenho no Moto G34. RSS por
 processo pode contar bibliotecas compartilhadas mais de uma vez.
 

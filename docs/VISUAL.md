@@ -1,8 +1,8 @@
 # Identidade visual NovaOS 0.1
 
 O visual padrão usa `#08040F`, `#250044`, `#A020F0`, `#00DFFF`, `#007BFF` e
-`#EDE6FF`. As capturas citadas no pedido não foram recebidas neste ambiente;
-esta implementação segue a descrição textual, sem afirmar equivalência a elas.
+`#EDE6FF`. O visual Night Room adapta a composição da captura enviada, com
+wallpaper original e componentes nativos, sem afirmar equivalência pixel a pixel.
 
 ## Arte original entregue
 
@@ -13,7 +13,9 @@ esta implementação segue a descrição textual, sem afirmar equivalência a el
 - Onze ícones SVG originais em `themes/icons/NovaOS/scalable/apps`.
 - Temas nativos GTK3 e XFWM4 `NovaOS-Dark` e `NovaOS-Light`.
 
-Não há imagens externas ou fontes incorporadas. O código e a arte são MIT,
+Os wallpapers geométricos não usam imagens externas ou fontes incorporadas.
+O wallpaper Night Room é uma imagem original gerada, armazenada no repositório.
+O código e a arte são MIT,
 como o projeto. Os temas herdam os widgets completos do Adwaita instalado;
 a licença do GTK/Adwaita continua pertencendo aos respectivos autores.
 
@@ -123,3 +125,8 @@ NovaFetch usa Fastfetch real, logo original e seções com cores roxo/ciano, com
 formatos compacto e amplo. Veja [instalação e limites](PLASMA-MOBILE.md).
 A [captura real](validation/plasma-desktop.png) foi feita em Debian/Xvfb com KWin,
 não em Android nem em uma simulação web.
+
+A atualização [Night Room v2](NIGHT-ROOM.md) usa quarto noturno original gerado,
+painéis azul-escuros, N roxo/azul, quatro desktops numerados, menu com favoritos
+NovaOS e cartões nativos GTK3 à direita. A [nova captura](validation/room-desktop.png)
+e o [menu real](validation/room-desktop-menu.png) mostram o resultado executado.

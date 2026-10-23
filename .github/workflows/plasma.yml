@@ -11,7 +11,7 @@ jobs:
       - name: Install build and capture tools
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends git ca-certificates python3 python3-psutil xvfb xauth dbus-x11 wmctrl imagemagick
+          apt-get install -y --no-install-recommends git ca-certificates python3 python3-psutil xvfb xauth dbus-x11 wmctrl imagemagick xdotool
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
@@ -20,7 +20,7 @@ jobs:
           printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d
           chmod 755 /usr/sbin/policy-rc.d
           sed '/^#/d;/^$/d' desktop/packages-lite.txt | xargs apt-get install -y --no-install-recommends
-          bash installers/install-system.sh --without-music
+          bash installers/install-system.sh
           useradd --create-home --shell /bin/bash nova
           touch /etc/novaos-mobile-owner
           bash installers/install-visual-update.sh --plasma
@@ -32,6 +32,6 @@ jobs:
         with:
           name: native-plasma-evidence-not-android
           path: |
-            /tmp/plasma.png
+            /tmp/plasma*.png
             /tmp/novaos-plasma-report.json
           if-no-files-found: error

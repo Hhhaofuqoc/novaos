@@ -16,6 +16,16 @@ O atualizador público `novaos-visual-v1` também foi baixado via HTTPS: checksu
 do bootstrap, checksum fixado do arquivo e os 14 arquivos internos passaram
 pela verificação real com `--download-only`. Isso não executa a instalação Android.
 
+Atualização Night Room v2: **80 testes unitários/lifecycle**, shellcheck e build
+real dos dois pacotes Debian passaram. A suíte GTK/GStreamer passou em **21
+verificações**, incluindo avanço de áudio, pausa, seek, EOS e metadados privados
+para o widget. O teste Plasma verificou boot, KWin, menu/favoritos, wallpaper,
+quatro desktops, sidebar e reprodução em segundo plano com pausa/próxima reais.
+Evidências novas: [relatório](validation/room-report.json),
+[captura](validation/room-desktop.png), [menu](validation/room-desktop-menu.png).
+O [guia Night Room](NIGHT-ROOM.md) descreve instalação e limites. Essas verificações
+continuam sendo nativas x86_64, não Android/PRoot nem saída física de áudio.
+
 ## Resultados
 
 | Área | Executado | Resultado / limite |

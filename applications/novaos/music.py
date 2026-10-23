@@ -404,6 +404,26 @@ def create_application():
                 self.subtitle.set_text(f'{track.artist} · {track.album}')
                 self.tree.get_selection().select_path(self.playlist.index)
             self.play_button.set_sensitive(track is not None)
+            self.publish_playback()
+
+        def publish_playback(self):
+            # Private local IPC for the native desktop cards; no network service.
+            from .desktop_widgets import playback_path
+            from .config import atomic_write
+            import psutil
+            track=self.playlist.current
+            valid, position=self.player.query_position(Gst.Format.TIME)
+            payload={'pid':os.getpid(), 'created':psutil.Process().create_time(),
+                     'title':track.title if track else 'NovaMusic',
+                     'artist':track.artist if track else 'Biblioteca local',
+                     'playing':self.playing, 'duration':self.duration,
+                     'position':max(0,position/Gst.SECOND) if valid else 0}
+            try:
+                path=playback_path()
+                path.parent.mkdir(parents=True,exist_ok=True,mode=0o700)
+                atomic_write(path,json.dumps(payload))
+            except OSError:
+                pass
 
         def set_playing(self,playing):
             self.playing=playing
@@ -414,6 +434,7 @@ def create_application():
             elif not playing and self.timer:
                 GLib.source_remove(self.timer)
                 self.timer=0
+            self.publish_playback()
 
         def start(self):
             track=self.playlist.current
@@ -473,6 +494,7 @@ def create_application():
                 self.progress.set_value(position/Gst.SECOND)
                 self.updating=False
                 self.time_label.set_text(f'{self.time_text(position/Gst.SECOND)} / {self.time_text(self.duration)}')
+            self.publish_playback()
             return True
 
         def seek(self,_scale,_scroll,value):
@@ -584,6 +606,11 @@ def create_application():
             self.set_playing(False)
             self.player.set_state(Gst.State.NULL)
             self.player.get_bus().remove_signal_watch()
+            from .desktop_widgets import playback_path
+            try:
+                playback_path().unlink(missing_ok=True)
+            except OSError:
+                pass
             self.get_application().window=None
 
     class MusicApplication(Gtk.Application):
@@ -597,8 +624,14 @@ def create_application():
             self.window.present()
 
         def do_command_line(self,command_line):
-            self.activate()
-            for argument in command_line.get_arguments()[1:]:
+            arguments=command_line.get_arguments()[1:]
+            if '--background' in arguments:
+                if self.window is None:
+                    self.window=MusicWindow(self)
+                    self.window.hide()
+            else:
+                self.activate()
+            for argument in arguments:
                 if argument == '--toggle':
                     self.window.play_pause()
                 elif argument == '--next':
@@ -622,6 +655,7 @@ def main(argv=None):
     parser.add_argument('--toggle',action='store_true',help='Play or pause the current track')
     parser.add_argument('--next',action='store_true',help='Play the next track')
     parser.add_argument('--previous',action='store_true',help='Play the previous track')
+    parser.add_argument('--background',action='store_true',help='Control or start the player without raising its window')
     parser.add_argument('--audio-test',metavar='PATH',help='Decode local audio to a test sink (no hardware output)')
     options=parser.parse_args(arguments)
     if options.audio_test:

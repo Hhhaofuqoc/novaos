@@ -3,7 +3,7 @@ Description=NovaOS Synthwave
 Opacity=1
 Blur=false
 [Background]
-Color=8,4,15
+Color=11,13,23
 [BackgroundIntense]
 Color=20,10,32
 [Foreground]
@@ -11,7 +11,7 @@ Color=237,230,255
 [ForegroundIntense]
 Color=255,255,255
 [Color0]
-Color=8,4,15
+Color=11,13,23
 [Color1]
 Color=243,139,168
 [Color2]

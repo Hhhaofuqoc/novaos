@@ -25,11 +25,20 @@ case "$desktop" in
       echo 'Plasma ainda não instalado. Aplique a atualização Plasma do NovaOS.' >&2; exit 1;
     }
     export XDG_CURRENT_DESKTOP=KDE DESKTOP_SESSION=plasma KDE_SESSION_VERSION=6
+    if [[ -n ${NOVAOS_LANG:-} ]]; then
+      export LANG=$NOVAOS_LANG
+    elif [[ $(locale -a) == *pt_BR.utf8* ]]; then
+      export LANG=pt_BR.UTF-8 LANGUAGE=pt_BR:pt:en
+    else
+      export LANG=C.UTF-8
+    fi
     export QT_QUICK_BACKEND=software QT_X11_NO_MITSHM=1
     # PRoot has no systemd --user manager. Plasma still supports direct startup.
     command -v kwriteconfig6 >/dev/null && kwriteconfig6 --file startkderc --group General --key systemdBoot false
     kwriteconfig6 --file kscreenlockerrc --group Daemon --key Autolock false
     kwriteconfig6 --file kscreenlockerrc --group Daemon --key LockOnResume false
+    kwriteconfig6 --file kwinrc --group Desktops --key Number 4
+    kwriteconfig6 --file kwinrc --group Desktops --key Rows 1
     initial_profile=$(novaos profile)
     composition=false
     case "$initial_profile" in balanced|ultra) composition=true;; esac

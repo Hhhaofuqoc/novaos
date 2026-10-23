@@ -13,13 +13,16 @@ FILES=['applications/novafetch','applications/novaos/__main__.py','applications/
        'themes/fetch/compact.jsonc','themes/fetch/wide.jsonc','themes/plasma/NovaOS.colors',
        'themes/plasma/NovaOS.profile','themes/plasma/NovaOS.colorscheme',
        'themes/apply-plasma.sh','themes/icons/NovaOS/index.theme',
+       'themes/icons/NovaOS/scalable/apps/novaos.svg',
+       'themes/plasma/novaos-widgets.desktop','wallpapers/novaos-night-room.png',
+       'applications/novaos/desktop_widgets.py','applications/novaos/music.py',
        'installers/install-visual-update.sh','mobile/novaos_mobile.py',
        'mobile/guest-session.sh','mobile/packages-plasma.txt']
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,default=ROOT/'dist')
-    parser.add_argument('--base-url',default='https://raw.githubusercontent.com/Hhhaofuqoc/novaos/novaos-visual-v1')
+    parser.add_argument('--base-url',default='https://raw.githubusercontent.com/Hhhaofuqoc/novaos/novaos-visual-v2')
     args=parser.parse_args()
     if not args.base_url.startswith('https://') or any(c.isspace() for c in args.base_url):
         parser.error('HTTPS base URL required')

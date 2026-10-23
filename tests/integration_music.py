@@ -23,6 +23,7 @@ os.environ['NOVAOS_AUDIO_SINK']='fakesink'
 
 def main():
     from novaos.music import create_application, _runtime
+    from novaos.desktop_widgets import read_playback, playback_path
     Gtk,Gst,GLib,_,_,_= _runtime()
     events=[]
     def pump(seconds=.12):
@@ -56,10 +57,13 @@ def main():
             result,state,_=window.player.get_state(2*Gst.SECOND)
             valid,position=window.player.query_position(Gst.Format.TIME)
             check(state==Gst.State.PLAYING and valid and position>0,'real GStreamer playback position advances')
+            check(read_playback().get('playing') is True and read_playback().get('position',0)>0,
+                  'desktop widget receives live local playback metadata')
             window.play_pause()
             pump()
             _,state,_=window.player.get_state(2*Gst.SECOND)
             check(state==Gst.State.PAUSED,'pause reaches Gst PAUSED')
+            check(read_playback().get('playing') is False,'desktop widget receives paused state')
             window.seek(None,None,20)
             pump()
             valid,position=window.player.query_position(Gst.Format.TIME)
@@ -106,6 +110,7 @@ def main():
             pump()
             check(app.window is None,'window destroy releases app reference')
             check(window.player.get_state(0)[1]==Gst.State.NULL,'quit releases GStreamer pipeline')
+            check(not playback_path().exists(),'quit removes private playback status')
         finally:
             if app.window is not None:
                 app.window.destroy()

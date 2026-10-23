@@ -113,7 +113,7 @@ entry novaos-updater NovaUpdater 'Revisar e instalar atualizações Debian' 'nov
 entry novaos-plasma-terminal NovaTerminal 'Terminal Linux real com Konsole' konsole /usr/share/icons/NovaOS/scalable/apps/novaos-terminal.svg 'System;TerminalEmulator;'
 entry novaos-plasma-files NovaFiles 'Arquivos e pastas com Dolphin' 'dolphin %U' /usr/share/icons/NovaOS/scalable/apps/novaos-files.svg 'System;FileTools;FileManager;'
 # Absolute NovaOS icons also resolve in Plasma when composition is disabled.
-for component in welcome browser music notes; do
+for component in welcome browser music notes editor monitor settings store updater; do
     icon="novaos-$component"
     [[ $component != welcome ]] || icon=novaos
     sed -i "s|^Icon=.*|Icon=/usr/share/icons/NovaOS/scalable/apps/$icon.svg|" "$destdir/usr/share/applications/novaos-$component.desktop"
@@ -131,5 +131,6 @@ StartupNotify=false
 X-GNOME-Autostart-enabled=true
 AUTOSTART
 chmod 0644 "$destdir/etc/xdg/autostart/novaos-session.desktop"
+install_file "$repo/themes/plasma/novaos-widgets.desktop" etc/xdg/autostart/novaos-widgets.desktop
 # No default user config is copied over existing preferences or personal data.
 printf 'Installed NovaOS-owned files into %s\n' "$destdir"

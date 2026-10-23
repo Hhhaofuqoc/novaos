@@ -1,0 +1,11 @@
+test_download_failure_preserves_existing_home_data (test_bootstrap.BootstrapTests.test_download_failure_preserves_existing_home_data) ... ok
+test_download_only_never_executes_installation (test_bootstrap.BootstrapTests.test_download_only_never_executes_installation) ... ok
+test_generated_script_checksum_and_https_requirement (test_bootstrap.BootstrapTests.test_generated_script_checksum_and_https_requirement) ... ok
+test_source_manifest_failure_never_installs (test_bootstrap.BootstrapTests.test_source_manifest_failure_never_installs) ... ok
+test_tampered_archive_never_extracts_or_executes (test_bootstrap.BootstrapTests.test_tampered_archive_never_extracts_or_executes) ... ok
+test_verified_download_installs_and_preserves_sources (test_bootstrap.BootstrapTests.test_verified_download_installs_and_preserves_sources) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.049s
+
+OK

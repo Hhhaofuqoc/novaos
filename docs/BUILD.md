@@ -34,6 +34,15 @@ O instalador de sistema é a única fonte da estrutura do pacote.
 - `release-manifest.json` com tamanhos/hashes, e `dist/SHA256SUMS`;
 - arquivos `.tar.gz.sha256` ao lado dos bundles, para conferir cada download;
 - `SHA256SUMS` na raiz do código e dentro dos bundles, para verificar os fontes.
+- `install-novaos.sh` e `.sha256`: downloader externo com o hash do bundle fixado.
+
+O downloader é gerado **depois** do arquivo Mobile para não criar uma dependência
+circular entre os hashes. `NOVAOS_DOWNLOAD_BASE_URL` permite apontar uma release
+HTTPS diferente; o padrão é a release `v0.1.0-mobile-lite` do repositório NovaOS.
+Sua origem é `mobile/bootstrap-termux.sh.in`, com geração por
+`scripts/build-bootstrap.py`. Ele preserva os fontes numa pasta nova e remove
+o download temporário ao terminar. Falhas de rede ou checksum não executam a
+instalação. O parâmetro `--download-only` verifica/extrai sem instalar.
 
 O bundle Mobile não é uma rootfs pronta nem APK. Ele instala Debian/pacotes usando
 os repositórios configurados. Nesta entrega, os bundles de fontes e Mobile incluem
@@ -65,7 +74,7 @@ neste ambiente.
 - `release.yml`: execução manual de uma tag existente. Sempre prepara artifacts;
   publica prerelease **somente** com `publish=true` e variável de repositório
   `NOVAOS_PUBLISH_RELEASES=true`. O padrão não publica. `gh release create
-  --verify-tag` recusa criar tag implicitamente. A versão inicial aceita `v0.1.0`;
+  --verify-tag` recusa criar tag implicitamente. A versão inicial aceita `v0.1.0-mobile-lite`;
   atualize a validação ao versionar o projeto.
 
 A receita de ISO e a publicação de release são etapas distintas. A release de

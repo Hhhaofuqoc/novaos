@@ -90,8 +90,13 @@ executa a sessão instalada num kernel Linux nativo, não emula Android.
    descartável, respeitando as confirmações de perda de dados.
 7. Em modo avião, confirmar abertura dos apps locais, edição e reprodução.
 
+O downloader automático também passou em seis testes adicionais: download
+verificado, arquivo adulterado, manifesto interno inválido, falha de rede,
+preservação de arquivos e modo de download sem executar instalação. A validação
+de download HTTPS da release publicada é registrada junto dos artefatos.
+
 Continuam pendentes: instalação ARM64 completa em Android, comportamento PRoot,
 saída de áudio física, toque, suspensão/recuperação Android, restauração completa
-real, boot BIOS/UEFI de ISO e instalador Desktop. GitHub Actions foi configurado,
-mas nenhum workflow remoto foi executado ou release pública publicada nesta sessão.
+real, boot BIOS/UEFI de ISO e instalador Desktop. GitHub Actions foi configurado;
+esta matriz registra os testes locais executados, não um resultado de workflow remoto.
 Não há ISO nem APK NovaOS fabricado nesta entrega.

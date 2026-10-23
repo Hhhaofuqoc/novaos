@@ -24,14 +24,32 @@ o Android solicitar. Não conceda root, acessibilidade ou acesso a contatos.
 
 ## 2. Baixe e confira o pacote no próprio celular
 
+### Instalação automática com um comando
+
+No Termux, este comando baixa o instalador e seu checksum da release Mobile Lite,
+confere o script e então executa. O instalador baixa o pacote completo de cerca
+de 35 MiB, verifica o SHA-256 fixado no script e o manifesto interno, extrai em
+uma pasta nova na home e instala as dependências:
+
+```bash
+curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://github.com/Hhhaofuqoc/novaos/releases/download/v0.1.0-mobile-lite/{install-novaos.sh,install-novaos.sh.sha256}' && sha256sum -c install-novaos.sh.sha256 && bash install-novaos.sh
+```
+
+Depois execute `novaos-mobile start`. O aplicativo Android Termux:X11 continua
+necessário; o instalador não pode confirmar permissões Android por você.
+O código-fonte desta edição fica na branch `mobile-lite-0.1.0` do repositório.
+Para apenas baixar/verificar/extrair, use `bash install-novaos.sh --download-only`.
+
+### Alternativa: baixar os arquivos manualmente
+
 Baixe os arquivos fornecidos junto desta entrega:
 
 - `novaos-0.1.0-mobile.tar.gz`
 - `novaos-0.1.0-mobile.tar.gz.sha256`
 
 O pacote contém fontes completas, temas, instalador e as 12 músicas já renderizadas.
-Não há URL pública de projeto/release configurada. Use os arquivos anexos ou
-copiados da entrega; não há comando `git clone` apontando a um repositório fictício.
+Os arquivos também estão na [release Mobile Lite](https://github.com/Hhhaofuqoc/novaos/releases/tag/v0.1.0-mobile-lite).
+O procedimento manual abaixo continua disponível.
 
 No Termux, execute:
 

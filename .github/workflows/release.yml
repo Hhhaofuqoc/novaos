@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing Git tag matching the package version (v0.1.0)
-        default: v0.1.0
+        description: Existing Git tag for Mobile Lite (v0.1.0-mobile-lite)
+        default: v0.1.0-mobile-lite
         required: true
         type: string
       publish:
@@ -26,7 +26,7 @@ jobs:
       - name: Validate version
         env:
           RELEASE_TAG: ${{ inputs.tag }}
-        run: test "$RELEASE_TAG" = v0.1.0
+        run: test "$RELEASE_TAG" = v0.1.0-mobile-lite
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ inputs.tag }}
@@ -34,7 +34,10 @@ jobs:
       - run: python3 -m unittest discover -s tests -v
       - run: python3 music/generate.py
       - run: python3 music/verify.py
-      - run: bash scripts/release.sh
+      - name: Build packages and verified downloader
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: NOVAOS_DOWNLOAD_BASE_URL="https://github.com/$GITHUB_REPOSITORY/releases/download/$RELEASE_TAG" bash scripts/release.sh
       - name: Verify checksums
         run: cd dist && sha256sum -c SHA256SUMS
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

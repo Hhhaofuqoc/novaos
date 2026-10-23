@@ -55,11 +55,14 @@ cp -- "$out/novaos-${version}-source.tar.gz" "$out/novaos-${version}-mobile.tar.
 if [[ -f $repo/music/generated/manifest.json ]]; then
     tar "${tar_args[@]}" -C "$repo" -cf - music/generated music/LICENSE music/cover.svg | gzip -n > "$out/novaos-${version}-music.tar.gz"
 fi
+download_base=${NOVAOS_DOWNLOAD_BASE_URL:-https://github.com/Hhhaofuqoc/novaos/releases/download/v${version}-mobile-lite}
+python3 "$repo/scripts/build-bootstrap.py" --bundle "$out/novaos-${version}-mobile.tar.gz" \
+    --base-url "$download_base" --version "$version" --output "$out/install-novaos.sh"
 python3 - "$out" "$version" <<'PY'
 import hashlib, json, pathlib, sys
 out, version = pathlib.Path(sys.argv[1]), sys.argv[2]
 # Only this version's artifacts; stale outputs must not silently enter a release.
-files = sorted(p for p in out.iterdir() if p.is_file() and not p.name.endswith('.sha256') and (p.name.startswith(f'novaos-{version}-') or p.name.endswith(f'_{version}_all.deb')))
+files = sorted(p for p in out.iterdir() if p.is_file() and not p.name.endswith('.sha256') and (p.name.startswith(f'novaos-{version}-') or p.name.endswith(f'_{version}_all.deb') or p.name == 'install-novaos.sh'))
 entries = []
 for path in files:
     with path.open('rb') as stream:

@@ -88,12 +88,12 @@ jobs:
               assert json.loads(path.read_text())['passed'],str(path)
           text='''NovaOS Plasma 0.1.0 alpha — Your universe. Your system.
 
-ISO Live Debian 13 x86_64 com KDE Plasma, visual Night Room, NovaFetch e aplicativos locais.
-Boot BIOS e UEFI verificado em QEMU, com sessão KDE real, widgets, Konsole e Dolphin.
-O instalador Debian está incluído; instalação em disco, Secure Boot e hardware físico não foram validados.
-Verifique o arquivo .iso.sha256 antes de gravar a mídia.
-Esta ISO é para PC x86_64, não para instalar como ROM Android.
-'''
+          ISO Live Debian 13 x86_64 com KDE Plasma, visual Night Room, NovaFetch e aplicativos locais.
+          Boot BIOS e UEFI verificado em QEMU, com sessão KDE real, widgets, Konsole e Dolphin.
+          O instalador Debian está incluído; instalação em disco, Secure Boot e hardware físico não foram validados.
+          Verifique o arquivo .iso.sha256 antes de gravar a mídia.
+          Esta ISO é para PC x86_64, não para instalar como ROM Android.
+          '''
           text+='\nCódigo-fonte: '+os.environ['SOURCE_REF']+'\n'
           if iso.stat().st_size>=2*1024**3:
               text+='\nA ISO ultrapassa o limite de 2 GiB por arquivo das Releases. Baixe o artefato completo (ISO + SHA256): '+os.environ['ISO_ARTIFACT_URL']+'\n'

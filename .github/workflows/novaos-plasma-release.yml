@@ -1,0 +1,113 @@
+name: NovaOS Plasma ISO and SHA256
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: novaos-plasma-live-release
+  cancel-in-progress: false
+env:
+  SOURCE_REF: c1251c79cedc88369159b1b80c34823288b03f8c
+  RELEASE_TAG: v0.1.0-plasma-live
+jobs:
+  plasma-iso:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout the reviewed Plasma implementation
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.SOURCE_REF }}
+          persist-credentials: false
+      - name: Prepare the disposable build runner
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/hostedtoolcache
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qemu-system-x86 ovmf python3-pil
+          echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
+          df -h /
+      - name: Build the real Debian Plasma Live ISO
+        run: |
+          docker run --rm --privileged \
+            -e DEBIAN_FRONTEND=noninteractive -e SOURCE_DATE_EPOCH \
+            -v "$GITHUB_WORKSPACE:/source" -w /source debian:trixie-slim bash -ec '
+              apt-get update
+              apt-get install -y --no-install-recommends git ca-certificates live-build debootstrap xorriso squashfs-tools dosfstools mtools grub-pc-bin grub-efi-amd64-bin isolinux syslinux-common dpkg-dev python3
+              bash desktop/build-iso.sh --edition plasma
+              xorriso -indev dist/novaos-0.1.0-plasma-amd64.iso -pvd_info -report_el_torito plain
+              cd dist
+              sha256sum -c novaos-0.1.0-plasma-amd64.iso.sha256
+            '
+      - name: Upload the ISO and its checksum
+        id: iso_artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: NovaOS-Plasma-amd64-ISO-SHA256
+          path: |
+            dist/novaos-0.1.0-plasma-amd64.iso
+            dist/novaos-0.1.0-plasma-amd64.iso.sha256
+            dist/novaos-0.1.0-plasma-build.log
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
+      - name: Boot the actual ISO with BIOS and inspect the KDE guest
+        run: sudo /usr/bin/python3 tests/integration/iso_boot.py dist/novaos-0.1.0-plasma-amd64.iso --output dist/boot-bios --timeout 600
+      - name: Boot the actual ISO with UEFI and inspect the KDE guest
+        run: sudo /usr/bin/python3 tests/integration/iso_boot.py dist/novaos-0.1.0-plasma-amd64.iso --output dist/boot-uefi --firmware uefi --timeout 600
+      - name: Convert real QEMU screenshots
+        if: always()
+        run: |
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          for path in Path('dist').glob('boot-*/screen.ppm'):
+              Image.open(path).save(path.with_suffix('.png'))
+          PY
+      - name: Upload boot evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: NovaOS-Plasma-real-ISO-boot-evidence
+          path: |
+            dist/boot-*/report.json
+            dist/boot-*/screen.png
+            dist/boot-*/serial.log
+            dist/boot-*/qemu.log
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Publish the ISO and SHA256 in a prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISO_ARTIFACT_URL: ${{ steps.iso_artifact.outputs.artifact-url }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          iso=Path('dist/novaos-0.1.0-plasma-amd64.iso')
+          for path in [Path('dist/boot-bios/report.json'),Path('dist/boot-uefi/report.json')]:
+              assert json.loads(path.read_text())['passed'],str(path)
+          text='''NovaOS Plasma 0.1.0 alpha — Your universe. Your system.
+
+ISO Live Debian 13 x86_64 com KDE Plasma, visual Night Room, NovaFetch e aplicativos locais.
+Boot BIOS e UEFI verificado em QEMU, com sessão KDE real, widgets, Konsole e Dolphin.
+O instalador Debian está incluído; instalação em disco, Secure Boot e hardware físico não foram validados.
+Verifique o arquivo .iso.sha256 antes de gravar a mídia.
+Esta ISO é para PC x86_64, não para instalar como ROM Android.
+'''
+          text+='\nCódigo-fonte: '+os.environ['SOURCE_REF']+'\n'
+          if iso.stat().st_size>=2*1024**3:
+              text+='\nA ISO ultrapassa o limite de 2 GiB por arquivo das Releases. Baixe o artefato completo (ISO + SHA256): '+os.environ['ISO_ARTIFACT_URL']+'\n'
+          Path('dist/release-notes.md').write_text(text)
+          PY
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --target "$SOURCE_REF" --prerelease \
+              --title 'NovaOS Plasma 0.1.0 Live — ISO x86_64' --notes-file dist/release-notes.md
+          fi
+          gh release edit "$RELEASE_TAG" --notes-file dist/release-notes.md
+          cp dist/boot-bios/report.json dist/bios-boot-report.json
+          cp dist/boot-uefi/report.json dist/uefi-boot-report.json
+          files=(dist/novaos-0.1.0-plasma-amd64.iso.sha256 dist/bios-boot-report.json dist/uefi-boot-report.json)
+          if [ "$(stat -c %s dist/novaos-0.1.0-plasma-amd64.iso)" -lt 2147483648 ]; then
+            files+=(dist/novaos-0.1.0-plasma-amd64.iso)
+          fi
+          gh release upload "$RELEASE_TAG" "${files[@]}" --clobber

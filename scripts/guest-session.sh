@@ -9,6 +9,16 @@ export XDG_DATA_DIRS="${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
 export NO_AT_BRIDGE=1
 command -v openbox >/dev/null || { echo 'Openbox ausente. Use novaos repair.' >&2; exit 1; }
 command -v python3 >/dev/null || { echo 'Python3 ausente.' >&2; exit 1; }
+# Diagnosticos concretos antes de iniciar um segundo gerenciador de janelas.
+# xdpyinfo consulta o servidor de verdade (socket existente pode ser obsoleto).
+if ! xdpyinfo -display "${DISPLAY:-:1}" >/dev/null 2>&1; then
+  echo "[NovaOS] ERRO: display ${DISPLAY:-indefinido} nao acessivel a partir do PRoot. Verifique --shared-tmp e tente outro display (:2)." >&2
+  exit 1
+fi
+if wmctrl -m >/dev/null 2>&1; then
+  echo "[NovaOS] ERRO: este display ja possui um gerenciador de janelas. Evitando conflito. Use NOVAOS_DISPLAY=:2 (ou :3) no Termux." >&2
+  exit 1
+fi
 children=()
 cleanup(){
   trap - EXIT INT TERM

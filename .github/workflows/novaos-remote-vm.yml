@@ -12,18 +12,31 @@ on:
           - '30'
           - '60'
           - '90'
+  workflow_run:
+    workflows:
+      - 'NovaOS Full ISO (amd64)'
+    types:
+      - completed
 
 permissions:
   contents: read
   actions: read
 
 concurrency:
-  group: novaos-browser-vm-${{ github.ref }}
+  group: novaos-browser-vm-${{ github.event_name }}
   cancel-in-progress: false
 
 jobs:
   remote:
     name: Boot NovaOS Full and open protected noVNC
+    # The auto-run only applies to the completed ISO with the LightDM login fix.
+    # Older successful ISOs must not open a remote session automatically.
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'workflow_run' &&
+           github.event.workflow_run.conclusion == 'success' &&
+           github.event.workflow_run.head_branch == 'main' &&
+           github.event.workflow_run.head_sha == '4d9c026dea73e22b00b8d654060111d67e140780') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 110
     steps:
@@ -43,10 +56,16 @@ jobs:
       - name: Download latest successfully built NovaOS Full ISO
         env:
           GH_TOKEN: ${{ github.token }}
+          AUTO_ISO_RUN_ID: ${{ github.event.workflow_run.id || '' }}
         shell: bash
         run: |
           set -Eeuo pipefail
-          RUN_ID="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow novaos-full-iso.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          if [[ -n "$AUTO_ISO_RUN_ID" ]]; then
+            RUN_ID="$AUTO_ISO_RUN_ID"
+          else
+            RUN_ID="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow novaos-full-iso.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          fi
+          echo "Using verified ISO workflow run: $RUN_ID"
           if [[ -z "$RUN_ID" ]]; then
             echo '::error::No successful NovaOS Full ISO build found. Complete the NovaOS Full ISO (amd64) workflow first.'
             exit 1
@@ -75,5 +94,6 @@ jobs:
       - name: Start temporary authenticated browser desktop
         env:
           NOVAOS_REMOTE_PASSWORD: ${{ secrets.NOVAOS_REMOTE_PASSWORD }}
+          NOVAOS_SESSION_MINUTES: ${{ inputs.session_minutes || '60' }}
         shell: bash
-        run: bash iso/full/remote-vm.sh '${{ inputs.session_minutes }}'
+        run: bash iso/full/remote-vm.sh "$NOVAOS_SESSION_MINUTES"

@@ -193,6 +193,15 @@ while True: time.sleep(1)
             unrelated.terminate()
             unrelated.wait(timeout=3)
 
+    def test_supervisor_starts_the_saved_container(self):
+        (self.app.state/'installed.json').write_text('{"container":"novaos-lite"}')
+        self.app=module.Mobile(self.app.state,self.prefix)
+        self.start_mock_services()
+        desktop=self.app.read()['children']['desktop']['pid']
+        command=Path(f'/proc/{desktop}/cmdline').read_bytes().split(b'\0')
+        self.assertIn(b'novaos-lite',command)
+        self.assertNotIn(b'novaos',command)
+
     def test_logs_are_bounded(self):
         self.app.log("x" * (module.MAX_LOG + 1))
         # Each record is capped; rotation also handles larger previous logs.

@@ -32,7 +32,7 @@ de 35 MiB, verifica o SHA-256 fixado no script e o manifesto interno, extrai em
 uma pasta nova na home e instala as dependências:
 
 ```bash
-curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v0.1.0-fix1/{install-novaos.sh,install-novaos.sh.sha256}' && sha256sum -c install-novaos.sh.sha256 && bash install-novaos.sh
+curl -fL --fail-early --proto '=https' --proto-redir '=https' --remote-name-all 'https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v0.1.0-fix2/{install-novaos.sh,install-novaos.sh.sha256}' && sha256sum -c install-novaos.sh.sha256 && bash install-novaos.sh
 ```
 
 Depois execute `novaos-mobile start`. O aplicativo Android Termux:X11 continua
@@ -86,6 +86,11 @@ O instalador usa a CLI OCI moderna do **proot-distro v5** e uma imagem Debian
 `trixie-slim` com digest fixado em `mobile/debian-image.txt`. Os pacotes APT usam
 assinaturas oficiais; não há execução de scripts remotos por `curl | sh`.
 Caso o instalador peça atualização do proot-distro, siga a instrução exibida.
+
+Se já existir um ambiente `novaos` sem a marca deste instalador, ele será
+preservado. O instalador escolherá `novaos-lite` ou um sufixo livre e guardará
+o nome para o launcher, backup e desinstalação. Não é necessário apagar ou
+renomear o ambiente anterior. `novaos-mobile doctor` mostra o nome selecionado.
 
 ## 3. Abra a sessão
 
@@ -190,7 +195,7 @@ novaos-mobile restore "$HOME/storage/downloads/novaos-backup.tar.gz"
 ```
 
 A restauração verifica o checksum e os caminhos. Ela **substitui todo o ambiente**,
-incluindo a home, e exige digitar `RESTAURAR novaos`. Restaure apenas backups
+incluindo a home, e exige digitar `RESTAURAR` seguido do nome do ambiente exibido. Restaure apenas backups
 criados por você. A instalação dos aplicativos Android e do launcher deve existir
 antes da restauração. O formato usado é o backup proot-distro v5.
 
@@ -201,7 +206,7 @@ novaos-mobile stop
 novaos-mobile uninstall
 ```
 
-Leia o aviso: o comando exige `EXCLUIR novaos` e apaga o Debian e `/home/nova`.
+Leia o aviso: o comando exige `EXCLUIR` seguido do nome do ambiente exibido e apaga esse Debian e `/home/nova`.
 Fontes, backups, Termux e Termux:X11 permanecem. Desinstalar Termux pelo Android
 é uma operação diferente que também apaga outros ambientes existentes nele.
 

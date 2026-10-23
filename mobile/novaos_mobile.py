@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import secrets
 import shutil
 import signal
@@ -21,6 +22,21 @@ import time
 
 ALIAS = "novaos"
 MAX_LOG = 2 * 1024 * 1024
+
+
+def load_container_alias(path, default=ALIAS):
+    """Preserve legacy installations; never guess when saved metadata is corrupt."""
+    try:
+        data = json.loads(Path(path).read_text())
+    except FileNotFoundError:
+        return default
+    except (OSError, ValueError) as error:
+        raise RuntimeError(f'Não foi possível ler a configuração do ambiente: {error}') from error
+    alias = data.get('container') if isinstance(data, dict) else None
+    if (not isinstance(alias, str) or
+            not re.fullmatch(r'novaos(?:-lite(?:-(?:[2-9]|[1-9][0-9]+))?)?', alias)):
+        raise RuntimeError('Nome de ambiente inválido em installed.json; nenhum ambiente foi alterado')
+    return alias
 
 
 def process_identity(pid):
@@ -84,7 +100,7 @@ def digest_file(path):
     return digest.hexdigest()
 
 
-def validate_backup(path):
+def validate_backup(path, alias=ALIAS):
     """Do not allow a NovaOS restore to overwrite another PRoot container."""
     count = 0
     with tarfile.open(path, "r:*") as archive:
@@ -93,11 +109,11 @@ def validate_backup(path):
             if not parts or member.name.startswith("/") or ".." in parts:
                 raise ValueError("Caminho inválido no backup")
             if parts[0] == "installed-rootfs":
-                valid = len(parts) > 1 and parts[1] == ALIAS
+                valid = len(parts) > 1 and parts[1] == alias
             else:
-                valid = parts[0] == ALIAS
+                valid = parts[0] == alias
             if not valid:
-                raise ValueError("O backup contém outro ambiente além de novaos")
+                raise ValueError(f"O backup contém outro ambiente além de {alias}")
             if member.isdev() or member.isfifo():
                 raise ValueError("Backup contém arquivo especial não permitido")
             if member.islnk():
@@ -117,6 +133,7 @@ class Mobile:
         self.state = Path(state or Path.home() / ".local/state/novaos-mobile")
         self.state.mkdir(parents=True, exist_ok=True, mode=0o700)
         self.state.chmod(0o700)
+        self.alias = load_container_alias(self.state/'installed.json')
         self.runtime = self.prefix / "tmp" / f"novaos-mobile-{os.getuid()}"
         self.file = self.state / "session.json"
         self.log_lock = threading.Lock()
@@ -284,7 +301,7 @@ class Mobile:
             x11 = launch("x11", command)
             await_socket(x_socket, x11)
             guest_runtime = f"/tmp/{self.runtime.name}"
-            guest = launch("desktop", ["proot-distro", "login", ALIAS, "--user", "nova", "--isolated", "--shared-tmp", "--",
+            guest = launch("desktop", ["proot-distro", "login", self.alias, "--user", "nova", "--isolated", "--shared-tmp", "--",
                 "/usr/bin/env", f"DISPLAY=:{display}", f"XAUTHORITY={guest_runtime}/Xauthority",
                 f"PULSE_SERVER=unix:{guest_runtime}/pulse/native", "NOVAOS_MOBILE=1", "/usr/local/libexec/novaos-mobile-session"])
             # An immediate missing desktop/permission error should not appear as success.
@@ -339,7 +356,7 @@ class Mobile:
             raise RuntimeError("O destino já existe; não será sobrescrito")
         if target.suffix not in ("gz", ".gz", ".xz", ".tar"):
             raise RuntimeError("Use um nome terminado em .tar.gz, .tar.xz ou .tar")
-        subprocess.run(["proot-distro", "backup", ALIAS, "--output", str(target)], check=True)
+        subprocess.run(["proot-distro", "backup", self.alias, "--output", str(target)], check=True)
         checksum = digest_file(target)
         Path(str(target) + ".sha256").write_text(f"{checksum}  {target.name}\n")
         print(f"Backup: {target}\nSHA256: {checksum}")
@@ -350,9 +367,10 @@ class Mobile:
         checksum = Path(str(source) + ".sha256").read_text().split()[0]
         if len(checksum) != 64 or digest_file(source) != checksum:
             raise RuntimeError("Checksum do backup inválido")
-        validate_backup(source)
-        print("A restauração substitui todo o ambiente novaos, incluindo /home/nova.")
-        if input('Digite RESTAURAR novaos para continuar: ') != "RESTAURAR novaos":
+        validate_backup(source, self.alias)
+        print(f"A restauração substitui todo o ambiente {self.alias}, incluindo /home/nova.")
+        confirmation = f'RESTAURAR {self.alias}'
+        if input(f'Digite {confirmation} para continuar: ') != confirmation:
             raise RuntimeError("Restauração cancelada")
         subprocess.run(["proot-distro", "restore", str(source)], check=True)
         print("Backup restaurado. Execute novaos-mobile start.")
@@ -360,16 +378,17 @@ class Mobile:
     def uninstall(self):
         self.require_stopped()
         print("Isto apaga o Debian NovaOS e todos os arquivos de /home/nova. Faça backup antes.")
-        if input('Digite EXCLUIR novaos para continuar: ') != "EXCLUIR novaos":
+        confirmation = f'EXCLUIR {self.alias}'
+        if input(f'Digite {confirmation} para continuar: ') != confirmation:
             raise RuntimeError("Desinstalação cancelada")
-        subprocess.run(["proot-distro", "remove", ALIAS], check=True)
+        subprocess.run(["proot-distro", "remove", self.alias], check=True)
         for path in (self.prefix / "bin/novaos-mobile", Path.home() / ".shortcuts/NovaOS"):
             with contextlib.suppress(FileNotFoundError):
                 path.unlink()
         print("Ambiente removido. Termux, Termux:X11, fontes e backups foram preservados.")
 
     def doctor(self):
-        report = {"architecture": os.uname().machine, "prefix": str(self.prefix),
+        report = {"architecture": os.uname().machine, "prefix": str(self.prefix), "container": self.alias,
                   "free_gib": round(shutil.disk_usage(self.prefix).free / 1024**3, 2),
                   "state": self.read(), "tools": {x: bool(shutil.which(x)) for x in
                   ("proot-distro", "termux-x11", "pulseaudio", "xauth")}}
@@ -393,8 +412,8 @@ def main(argv=None):
     item = sub.add_parser("shell")
     item.add_argument("--root", action="store_true", help="root emulado apenas dentro do Debian")
     args = parser.parse_args(argv)
-    app = Mobile()
     try:
+        app = Mobile()
         if args.command == "start":
             app.start(args.display, args.legacy_drawing)
         elif args.command == "_serve":
@@ -423,7 +442,7 @@ def main(argv=None):
         elif args.command == "uninstall":
             app.uninstall()
         elif args.command == "shell":
-            subprocess.run(["proot-distro", "login", ALIAS, "--user", "root" if args.root else "nova"], check=True)
+            subprocess.run(["proot-distro", "login", app.alias, "--user", "root" if args.root else "nova"], check=True)
         return 0
     except (OSError, RuntimeError, ValueError, subprocess.CalledProcessError, EOFError) as error:
         print(f"NovaOS: {error}", file=sys.stderr)

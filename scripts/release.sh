@@ -55,7 +55,7 @@ cp -- "$out/novaos-${version}-source.tar.gz" "$out/novaos-${version}-mobile.tar.
 if [[ -f $repo/music/generated/manifest.json ]]; then
     tar "${tar_args[@]}" -C "$repo" -cf - music/generated music/LICENSE music/cover.svg | gzip -n > "$out/novaos-${version}-music.tar.gz"
 fi
-download_base=${NOVAOS_DOWNLOAD_BASE_URL:-https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v${version}-fix1}
+download_base=${NOVAOS_DOWNLOAD_BASE_URL:-https://raw.githubusercontent.com/Hhhaofuqoc/novaos/mobile-lite-downloads-v${version}-fix2}
 python3 "$repo/scripts/build-bootstrap.py" --bundle "$out/novaos-${version}-mobile.tar.gz" \
     --base-url "$download_base" --version "$version" --output "$out/install-novaos.sh"
 python3 - "$out" "$version" <<'PY'

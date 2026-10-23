@@ -109,3 +109,14 @@ essa versão. `mobile/check-proot.sh` agora captura ambos os canais e distingue
 falha do comando de ausência da opção `--name`. Quatro testes de regressão
 passaram, incluindo a reprodução do formato de saída informado no Android.
 A correção não remove o rootfs nem exige atualizar um PRoot-Distro já compatível.
+
+## Correção Mobile fix2
+
+Uma instalação anterior já usava o nome `novaos`, sem a marca desta edição.
+O instalador agora consulta `proot-distro list --quiet` e escolhe um ambiente
+livre, como `novaos-lite`, sem apagar ou adotar o rootfs desconhecido. Ambientes
+marcados pela edição são reutilizados. O nome salvo passa a ser usado no launcher,
+backup, restauração e remoção, com confirmação correspondente ao ambiente.
+Passaram 26 testes Mobile (incluindo colisões, persistência do nome, processos
+reais e comportamento legado) e os seis testes do downloader. Esses testes
+não substituem a instalação completa no Android físico.

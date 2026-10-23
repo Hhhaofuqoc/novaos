@@ -42,17 +42,15 @@ flock -n 9 || { echo 'Outra instalação NovaOS está em execução.' >&2; exit 
 if command -v novaos-mobile >/dev/null && novaos-mobile status --quiet; then
   echo 'Encerre a sessão primeiro: novaos-mobile stop' >&2; exit 1
 fi
-if proot-distro login novaos -- /usr/bin/test -f /etc/debian_version 2>/dev/null; then
-  proot-distro login novaos -- /usr/bin/test -f /etc/novaos-mobile-owner || {
-    echo 'O nome novaos já existe, mas não pertence a este instalador. Nenhum arquivo foi alterado.' >&2; exit 1;
-  }
-else
+CONTAINER=$(python "$ROOT/mobile/select-container.py" "$STATE/installed.json")
+printf 'Ambiente selecionado para NovaOS Mobile Lite: %s\n' "$CONTAINER"
+if ! proot-distro login "$CONTAINER" -- /usr/bin/test -f /etc/novaos-mobile-owner 2>/dev/null; then
   IMAGE=$(grep -v '^#' "$ROOT/mobile/debian-image.txt" | tr -d '\n')
-  proot-distro install --name novaos "$IMAGE"
-  proot-distro login novaos -- /usr/bin/touch /etc/novaos-mobile-owner
+  proot-distro install --name "$CONTAINER" "$IMAGE"
+  proot-distro login "$CONTAINER" -- /usr/bin/touch /etc/novaos-mobile-owner
 fi
 # Paths are passed as argv to PRoot; no remote script is evaluated.
-proot-distro login novaos --bind "$ROOT:/opt/novaos-source" -- /bin/bash /opt/novaos-source/mobile/configure-guest.sh
+proot-distro login "$CONTAINER" --bind "$ROOT:/opt/novaos-source" -- /bin/bash /opt/novaos-source/mobile/configure-guest.sh
 install -d "$HOME/.local/lib/novaos-mobile" "$PREFIX/bin" "$HOME/.shortcuts"
 install -m 644 "$ROOT/mobile/novaos_mobile.py" "$HOME/.local/lib/novaos-mobile/novaos_mobile.py"
 # printf %q protects spaces in Termux's private home path.
@@ -60,5 +58,6 @@ printf '#!%s/bin/bash\nexec %q %q "$@"\n' "$PREFIX" "$PREFIX/bin/python" "$HOME/
 chmod 755 "$PREFIX/bin/novaos-mobile"
 printf '#!%s/bin/bash\nexec novaos-mobile start\n' "$PREFIX" > "$HOME/.shortcuts/NovaOS"
 chmod 700 "$HOME/.shortcuts/NovaOS"
-printf '%s\n' '{"edition":"mobile-lite","version":"0.1.0-alpha","container":"novaos"}' > "$STATE/installed.json"
+printf '{"edition":"mobile-lite","version":"0.1.0-alpha","container":"%s"}\n' "$CONTAINER" > "$STATE/installed.json"
+chmod 600 "$STATE/installed.json"
 printf '\nInstalação concluída. Instale também o APK oficial Termux:X11 e execute:\n  novaos-mobile start\n  novaos-mobile stop\nGuia: docs/MOBILE.md. APK NovaOS próprio não é necessário.\n'

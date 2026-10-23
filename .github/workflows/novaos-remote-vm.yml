@@ -1,0 +1,79 @@
+name: NovaOS Full Remote VM (browser)
+
+on:
+  workflow_dispatch:
+    inputs:
+      session_minutes:
+        description: 'Duração da sessão remota (minutos)'
+        required: true
+        default: '60'
+        type: choice
+        options:
+          - '30'
+          - '60'
+          - '90'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: novaos-browser-vm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  remote:
+    name: Boot NovaOS Full and open protected noVNC
+    runs-on: ubuntu-24.04
+    timeout-minutes: 110
+    steps:
+      - name: Check out NovaOS
+        uses: actions/checkout@v4
+
+      - name: Validate private access password
+        env:
+          NOVAOS_REMOTE_PASSWORD: ${{ secrets.NOVAOS_REMOTE_PASSWORD }}
+        shell: bash
+        run: |
+          if [[ ${#NOVAOS_REMOTE_PASSWORD} -lt 16 ]]; then
+            echo '::error::Set repository Actions secret NOVAOS_REMOTE_PASSWORD with at least 16 characters before starting.'
+            exit 1
+          fi
+
+      - name: Download latest successfully built NovaOS Full ISO
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          RUN_ID="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow novaos-full-iso.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          if [[ -z "$RUN_ID" ]]; then
+            echo '::error::No successful NovaOS Full ISO build found. Complete the NovaOS Full ISO (amd64) workflow first.'
+            exit 1
+          fi
+          mkdir -p dist
+          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name NovaOS-v1.0-Full-amd64 --dir dist
+          cd dist
+          sha256sum -c SHA256SUMS.txt
+          test -s NovaOS-v1.0-Full-amd64.iso
+          file NovaOS-v1.0-Full-amd64.iso
+          ls -lh NovaOS-v1.0-Full-amd64.iso
+
+      - name: Install QEMU, noVNC, Nginx and tunnel client
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            qemu-system-x86 novnc websockify nginx apache2-utils curl ca-certificates
+          curl --fail --location --retry 3 \
+            'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64' \
+            -o "$RUNNER_TEMP/cloudflared"
+          sudo install -m 0755 "$RUNNER_TEMP/cloudflared" /usr/local/bin/cloudflared
+          cloudflared --version
+
+      - name: Start temporary authenticated browser desktop
+        env:
+          NOVAOS_REMOTE_PASSWORD: ${{ secrets.NOVAOS_REMOTE_PASSWORD }}
+        shell: bash
+        run: bash iso/full/remote-vm.sh '${{ inputs.session_minutes }}'

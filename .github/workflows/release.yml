@@ -1,0 +1,62 @@
+name: Prepare or publish alpha release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing Git tag matching the package version (v0.1.0)
+        default: v0.1.0
+        required: true
+        type: string
+      publish:
+        description: Publish a GitHub prerelease (requires repository owner configuration)
+        default: false
+        required: true
+        type: boolean
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    container: debian:trixie-slim
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates python3 python3-psutil python3-numpy ffmpeg dpkg-dev
+      - name: Validate version
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: test "$RELEASE_TAG" = v0.1.0
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+      - run: python3 -m unittest discover -s tests -v
+      - run: python3 music/generate.py
+      - run: python3 music/verify.py
+      - run: bash scripts/release.sh
+      - name: Verify checksums
+        run: cd dist && sha256sum -c SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: novaos-release
+          path: dist/
+          if-no-files-found: error
+  publish:
+    needs: prepare
+    # Publication is off until an owner sets this repository variable to true.
+    if: inputs.publish && vars.NOVAOS_PUBLISH_RELEASES == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: novaos-release
+          path: dist
+      - name: Publish existing tag as prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" dist/* --repo "$GITHUB_REPOSITORY" --verify-tag --prerelease --title "NovaOS $RELEASE_TAG alpha" --notes "Native Linux alpha. Read the included documentation and validation matrix before installation. Android device testing and ISO boot validation are separate release gates."

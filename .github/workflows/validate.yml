@@ -1,0 +1,68 @@
+name: Validate and package
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    container: debian:trixie-slim
+    steps:
+      - name: Install test dependencies from signed Debian repositories
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates python3 python3-gi python3-psutil python3-numpy gir1.2-gtk-3.0 gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-pulseaudio ffmpeg shellcheck xvfb xauth xdotool dbus-x11 dpkg-dev
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Install actual Lite session dependencies
+        run: |
+          sed '/^#/d;/^$/d' desktop/packages-lite.txt | xargs apt-get install -y --no-install-recommends
+          apt-get install -y --no-install-recommends wmctrl imagemagick
+      - name: Syntax and static validation
+        run: |
+          find mobile themes installers scripts desktop -type f -name '*.sh' -exec bash -n {} \;
+          find mobile themes installers scripts desktop -type f -name '*.sh' -exec shellcheck -S error {} +
+          python3 -m compileall -q applications music tests
+      - name: Verify every declared Debian dependency exists
+        run: |
+          python3 - <<'PYCODE'
+          import pathlib, subprocess
+          packages = set()
+          for path in pathlib.Path('desktop').glob('packages-*.txt'):
+              packages.update(line.strip() for line in path.read_text().splitlines() if line.strip() and not line.startswith('#'))
+          for package in sorted(packages):
+              subprocess.run(['apt-cache', 'show', '--no-all-versions', package], stdout=subprocess.DEVNULL, check=True)
+          print(f'{len(packages)} package names resolved from signed Debian indexes')
+          PYCODE
+      - name: Unit and lifecycle tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Render original ambient album
+        run: python3 music/generate.py
+      - name: Exercise native NovaMusic controls and GStreamer EOS
+        env:
+          NOVAOS_AUDIO_SINK: fakesink
+        run: dbus-run-session -- xvfb-run -a /usr/bin/python3 tests/integration_music.py
+      - name: Verify every rendered audio file
+        run: python3 music/verify.py
+      - name: Native session, windows, persistence and resource measurements
+        run: bash tests/integration/run.sh
+      - name: Native light and dark theme contrast
+        run: xvfb-run -a /usr/bin/python3 tests/integration/theme_contrast.py --report dist/validation/theme-contrast.json
+      - name: Create actual Debian packages and archives
+        run: bash scripts/release.sh
+      - name: Verify archive integrity
+        run: |
+          cd dist
+          sha256sum -c SHA256SUMS
+          dpkg-deb --info novaos-desktop_0.1.0_all.deb
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: novaos-alpha-packages
+          path: dist/
+          if-no-files-found: error
+          retention-days: 14

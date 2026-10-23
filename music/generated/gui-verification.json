@@ -1,0 +1,26 @@
+{
+  "checks": [
+    "application registration",
+    "real GTK window opens",
+    "12 local tracks loaded",
+    "real GStreamer playback position advances",
+    "pause reaches Gst PAUSED",
+    "seek reaches 20 seconds",
+    "next loads track and metadata",
+    "previous returns to actual prior track",
+    "volume changes real pipeline",
+    "shuffle and repeat UI change backend",
+    "mini-player hides expanded interface",
+    "X11 Space key pauses playback",
+    "Ambient close keeps application alive",
+    "GUI state persisted to disk",
+    "real EOS stops final track without repeat",
+    "window destroy releases app reference",
+    "quit releases GStreamer pipeline"
+  ],
+  "checks_passed": 17,
+  "backend": "GTK3 + GStreamer + Xvfb",
+  "max_rss_kib": 82484,
+  "hardware_playback_tested": false,
+  "android_tested": false
+}

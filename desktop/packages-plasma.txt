@@ -1,0 +1,12 @@
+# Experimental full desktop in addition to the shared NovaOS application stack.
+# Lite is the primary implemented visual experience in 0.1.0.
+kde-plasma-desktop
+sddm
+plasma-nm
+plasma-pa
+powerdevil
+bluedevil
+systemsettings
+dolphin
+konsole
+kate

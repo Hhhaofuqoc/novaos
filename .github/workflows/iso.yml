@@ -1,0 +1,46 @@
+name: Build bootable Debian ISO
+on:
+  workflow_dispatch:
+    inputs:
+      edition:
+        description: Desktop edition (Plasma is experimental)
+        required: true
+        default: lite
+        type: choice
+        options: [lite, plasma]
+permissions:
+  contents: read
+jobs:
+  iso:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    # live-build mounts filesystems and enters chroots. Use only a trusted ref.
+    container:
+      image: debian:trixie-slim
+      options: --privileged
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git ca-certificates live-build debootstrap xorriso squashfs-tools dosfstools mtools grub-pc-bin grub-efi-amd64-bin isolinux syslinux-common dpkg-dev python3 python3-numpy ffmpeg
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Render the original album
+        run: python3 music/generate.py
+      - name: Build ISO
+        env:
+          NOVAOS_EDITION: ${{ inputs.edition }}
+        run: bash desktop/build-iso.sh --edition "$NOVAOS_EDITION"
+      - name: Inspect real ISO filesystem
+        run: |
+          find dist -name '*.iso' -exec xorriso -indev {} -pvd_info \;
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: novaos-${{ inputs.edition }}-amd64-iso
+          path: |
+            dist/*.iso
+            dist/*.sha256
+            dist/*build.log
+          if-no-files-found: error
+          retention-days: 7

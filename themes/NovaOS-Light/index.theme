@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=NovaOS-Light
+Comment=NovaOS native GTK and XFWM theme
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=NovaOS-Light
+MetacityTheme=Adwaita
+IconTheme=NovaOS
+CursorTheme=Adwaita

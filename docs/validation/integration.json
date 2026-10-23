@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "environment": {
+    "architecture": "x86_64",
+    "kernel": "6.18.55",
+    "python": "3.13.5",
+    "display": "Xvfb software X11",
+    "memory_total_bytes": 10452471808
+  },
+  "scope": "Native Linux integration; not Android, PRoot, ISO boot or hardware audio validation",
+  "network_isolation": "Docker --network none",
+  "checks": [
+    {
+      "name": "x11_real_xfwm4_started",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "real_theme_applied_lite",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "wallpaper_configured_and_panel_plugins_load",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "theme_update_preserves_panel_customization",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "staged_install_and_reinstall_preserve_user_files",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "launch_welcome",
+      "passed": true,
+      "details": {
+        "window": "0x01600003",
+        "pid": 3401
+      }
+    },
+    {
+      "name": "launch_settings",
+      "passed": true,
+      "details": {
+        "window": "0x01800007",
+        "pid": 3408
+      }
+    },
+    {
+      "name": "launch_monitor",
+      "passed": true,
+      "details": {
+        "window": "0x01a00003",
+        "pid": 3415
+      }
+    },
+    {
+      "name": "launch_notes",
+      "passed": true,
+      "details": {
+        "window": "0x01c00003",
+        "pid": 3422
+      }
+    },
+    {
+      "name": "launch_music",
+      "passed": true,
+      "details": {
+        "window": "0x01e00007",
+        "pid": 3430
+      }
+    },
+    {
+      "name": "launch_store",
+      "passed": true,
+      "details": {
+        "window": "0x02000003",
+        "pid": 3439
+      }
+    },
+    {
+      "name": "launch_updater",
+      "passed": true,
+      "details": {
+        "window": "0x02200003",
+        "pid": 3447
+      }
+    },
+    {
+      "name": "window_move_resize",
+      "passed": true,
+      "details": {
+        "WINDOW": 29360131,
+        "X": 98,
+        "Y": 178,
+        "WIDTH": 690,
+        "HEIGHT": 470,
+        "SCREEN": 0
+      }
+    },
+    {
+      "name": "notes_autosave_and_crash_recovery",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "window_maximize",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "window_minimize",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "multiple_workspaces",
+      "passed": true,
+      "details": true
+    },
+    {
+      "name": "measured_idle_cpu_and_memory",
+      "passed": true,
+      "details": {
+        "sample_seconds": 4.000413465000065,
+        "summed_rss_bytes": 790650880,
+        "cpu_one_core_percent": 0.24997416110836548,
+        "tracked_processes": 12,
+        "note": "Includes tracked Xvfb, XFWM, XFCE components and seven apps; RSS double-counts shared pages. Cloud x86_64 measurement, not a RAM minimum or Android performance prediction.",
+        "apps": {
+          "welcome": {
+            "rss_bytes": 61140992
+          },
+          "settings": {
+            "rss_bytes": 60968960
+          },
+          "monitor": {
+            "rss_bytes": 62640128
+          },
+          "notes": {
+            "rss_bytes": 61505536
+          },
+          "music": {
+            "rss_bytes": 68558848
+          },
+          "store": {
+            "rss_bytes": 62038016
+          },
+          "updater": {
+            "rss_bytes": 60973056
+          }
+        }
+      }
+    },
+    {
+      "name": "all_12_tracks_decode_gstreamer",
+      "passed": true,
+      "details": [
+        {
+          "title": "Neon Rain",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Purple Orbit",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Quiet Terminal",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Digital Memories",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Blue Horizon",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Floating Pixels",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Midnight Kernel",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Soft Geometry",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Distant Satellites",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Empty Desktop",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Celestial Code",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        },
+        {
+          "title": "Nova Dreams",
+          "decoded": true,
+          "duration_seconds": 72.0,
+          "sink": "fakesink",
+          "hardware_playback_tested": false
+        }
+      ]
+    },
+    {
+      "name": "native_desktop_screenshot",
+      "passed": true,
+      "details": "native-desktop.png"
+    },
+    {
+      "name": "all_native_apps_close_cleanly",
+      "passed": true,
+      "details": true
+    }
+  ],
+  "metrics": {
+    "sample_seconds": 4.000413465000065,
+    "summed_rss_bytes": 790650880,
+    "cpu_one_core_percent": 0.24997416110836548,
+    "tracked_processes": 12,
+    "note": "Includes tracked Xvfb, XFWM, XFCE components and seven apps; RSS double-counts shared pages. Cloud x86_64 measurement, not a RAM minimum or Android performance prediction.",
+    "apps": {
+      "welcome": {
+        "rss_bytes": 61140992
+      },
+      "settings": {
+        "rss_bytes": 60968960
+      },
+      "monitor": {
+        "rss_bytes": 62640128
+      },
+      "notes": {
+        "rss_bytes": 61505536
+      },
+      "music": {
+        "rss_bytes": 68558848
+      },
+      "store": {
+        "rss_bytes": 62038016
+      },
+      "updater": {
+        "rss_bytes": 60973056
+      }
+    }
+  },
+  "errors": [],
+  "passed": true
+}

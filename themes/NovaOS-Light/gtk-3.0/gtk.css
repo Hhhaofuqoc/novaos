@@ -1,0 +1,57 @@
+@import url("resource:///org/gtk/libgtk/theme/Adwaita/gtk-contained.css");
+@define-color theme_bg_color #F3EDFC;
+@define-color theme_fg_color #261237;
+@define-color theme_base_color #FDFBFF;
+@define-color theme_text_color #261237;
+@define-color theme_selected_bg_color #7434AF;
+@define-color theme_selected_fg_color #FFFFFF;
+@define-color borders #C7B4DA;
+window, dialog, .background { background-color: #F3EDFC; color: #261237; }
+headerbar, toolbar, menubar { background-image: none; background-color: #E8DEF3; border-color: #C7B4DA; }
+entry, textview text, treeview, view, .view { background-color: #FDFBFF; color: #261237; }
+button { background-image: none; background-color: #E8DEF3; color: #261237; border: 1px solid #B89CCD; border-radius: 8px; min-height: 28px; box-shadow: none; }
+button:hover { background-color: #DDC9EF; border-color: #7434AF; }
+button:checked, button:active, button.suggested-action { background-color: #7434AF; color: #FFFFFF; }
+button:disabled { color: #8E7D9B; }
+entry { border-radius: 7px; min-height: 28px; border-color: #B89CCD; }
+entry:focus { border-color: #007B9F; }
+selection, row:selected { background-color: #7434AF; color: #FFFFFF; }
+progressbar progress, scale highlight { background-image: none; background-color: #007B9F; border-color: #007B9F; }
+menu, .menu, popover { background-color: #F3EDFC; color: #261237; }
+tooltip { background-color: #250044; color: #EDE6FF; }
+.xfce4-panel { background-color: rgba(243,237,252,.97); border: 1px solid #A88ABD; border-radius: 14px; color: #261237; }
+.xfce4-panel button { background: transparent; border-color: transparent; box-shadow: none; border-radius: 9px; padding: 5px; }
+.xfce4-panel button:hover, .xfce4-panel button:checked { background-color: #DDC9EF; border-color: #A88ABD; }
+#XfceNotifyWindow { background-color: #F3EDFC; border: 1px solid #7434AF; border-radius: 12px; color: #261237; }
+
+/* Keep inactive windows readable, using the same palette as focused windows. */
+window:backdrop, dialog:backdrop, .background:backdrop {
+  background-color: #F3EDFC; color: #261237;
+}
+label:backdrop { color: inherit; }
+headerbar:backdrop, toolbar:backdrop, menubar:backdrop {
+  background-image: none; background-color: #E8DEF3; color: #261237; border-color: #C7B4DA;
+}
+button:backdrop {
+  background-image: none; background-color: #E8DEF3; color: #261237;
+  border-color: #B89CCD; box-shadow: none;
+}
+button:backdrop:checked, button:backdrop:active, button.suggested-action:backdrop {
+  background-color: #7434AF; color: #FFFFFF; border-color: #7434AF;
+}
+button:backdrop:disabled { background-color: #E8DEF3; color: #8E7D9B; border-color: #C7B4DA; }
+entry:backdrop, textview:backdrop text, textview text:backdrop,
+treeview:backdrop, view:backdrop, .view:backdrop {
+  background-color: #FDFBFF; color: #261237; border-color: #B89CCD;
+}
+selection:backdrop, row:backdrop:selected, .view:backdrop:selected {
+  background-color: #7434AF; color: #FFFFFF;
+}
+menu:backdrop, .menu:backdrop, popover:backdrop {
+  background-color: #F3EDFC; color: #261237; border-color: #C7B4DA;
+}
+.xfce4-panel:backdrop { background-color: rgba(243,237,252,.97); color: #261237; }
+.xfce4-panel button:backdrop { background: transparent; color: #261237; border-color: transparent; }
+.xfce4-panel button:backdrop:hover, .xfce4-panel button:backdrop:checked {
+  background-color: #DDC9EF; border-color: #A88ABD;
+}

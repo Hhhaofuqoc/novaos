@@ -1,0 +1,26 @@
+# Hardware/boot integration for a real desktop. Never use this in PRoot.
+linux-image-amd64
+systemd-sysv
+xserver-xorg
+lightdm
+lightdm-gtk-greeter
+network-manager
+network-manager-gnome
+bluez
+blueman
+pipewire-audio
+wireplumber
+polkitd
+pkexec
+synaptic
+sudo
+live-boot
+live-config
+live-config-systemd
+live-tools
+locales
+less
+nano
+alsa-utils
+xfce4-power-manager
+conky-std

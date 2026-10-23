@@ -1,0 +1,66 @@
+/* NovaOS — Adwaita supplies complete, accessible native GTK widgets. */
+@import url("resource:///org/gtk/libgtk/theme/Adwaita/gtk-contained-dark.css");
+@define-color theme_bg_color #10091C;
+@define-color theme_fg_color #EDE6FF;
+@define-color theme_base_color #08040F;
+@define-color theme_text_color #EDE6FF;
+@define-color theme_selected_bg_color #7434AF;
+@define-color theme_selected_fg_color #FFFFFF;
+@define-color insensitive_fg_color #9585AB;
+@define-color borders #40304F;
+window, dialog, .background { background-color: #10091C; color: #EDE6FF; }
+headerbar, toolbar, menubar { background-image: none; background-color: #1A102A; color: #EDE6FF; border-color: #40304F; }
+entry, textview text, treeview, view, .view { background-color: #08040F; color: #EDE6FF; }
+button { background-image: none; background-color: #241332; color: #EDE6FF; border: 1px solid #55326C; border-radius: 8px; min-height: 28px; box-shadow: none; }
+button:hover { background-color: #342047; border-color: #A020F0; }
+button:checked, button:active, button.suggested-action { background-color: #663195; border-color: #A020F0; }
+button:disabled { background-color: #181120; color: #9585AB; border-color: #372940; }
+entry { border-radius: 7px; border-color: #55326C; min-height: 28px; }
+entry:focus { border-color: #00DFFF; box-shadow: 0 0 0 1px #00DFFF; }
+selection, row:selected { background-color: #663195; color: #FFFFFF; }
+progressbar progress, scale highlight { background-color: #00B8D5; background-image: none; border-color: #00DFFF; }
+scale slider { background-image: none; background-color: #EDE6FF; border-color: #00DFFF; }
+notebook header { background-color: #160D23; }
+notebook header tab:checked { border-color: #A020F0; }
+menu, .menu, popover { background-color: #180E26; color: #EDE6FF; border-color: #55326C; }
+menuitem:hover { background-color: #663195; }
+tooltip { background-color: #250044; color: #EDE6FF; border-color: #A020F0; }
+separator { background-color: #40304F; }
+.xfce4-panel { background-color: rgba(12, 7, 22, 0.96); border: 1px solid #66388A; border-radius: 14px; color: #EDE6FF; }
+.xfce4-panel button { background: transparent; border-color: transparent; box-shadow: none; border-radius: 9px; padding: 5px; }
+.xfce4-panel button:hover, .xfce4-panel button:checked { background-color: #40205B; border-color: #66388A; }
+#XfceNotifyWindow { background-color: #1A102A; border: 1px solid #A020F0; border-radius: 12px; color: #EDE6FF; }
+
+/* Adwaita explicitly recolors unfocused windows. Preserve NovaOS contrast in
+   every window, including the persistent monitor and music side panels. */
+window:backdrop, dialog:backdrop, .background:backdrop {
+  background-color: #10091C; color: #EDE6FF;
+}
+label:backdrop { color: inherit; }
+headerbar:backdrop, toolbar:backdrop, menubar:backdrop {
+  background-image: none; background-color: #1A102A; color: #EDE6FF; border-color: #40304F;
+}
+button:backdrop {
+  background-image: none; background-color: #241332; color: #EDE6FF;
+  border-color: #55326C; box-shadow: none;
+}
+button:backdrop:checked, button:backdrop:active, button.suggested-action:backdrop {
+  background-color: #663195; color: #FFFFFF; border-color: #A020F0;
+}
+button:backdrop:disabled { background-color: #181120; color: #9585AB; border-color: #372940; }
+entry:backdrop, textview:backdrop text, textview text:backdrop,
+treeview:backdrop, view:backdrop, .view:backdrop {
+  background-color: #08040F; color: #EDE6FF; border-color: #55326C;
+}
+selection:backdrop, row:backdrop:selected, .view:backdrop:selected {
+  background-color: #663195; color: #FFFFFF;
+}
+notebook:backdrop header { background-color: #160D23; }
+menu:backdrop, .menu:backdrop, popover:backdrop {
+  background-color: #180E26; color: #EDE6FF; border-color: #55326C;
+}
+.xfce4-panel:backdrop { background-color: rgba(12, 7, 22, 0.96); color: #EDE6FF; }
+.xfce4-panel button:backdrop { background: transparent; color: #EDE6FF; border-color: transparent; }
+.xfce4-panel button:backdrop:hover, .xfce4-panel button:backdrop:checked {
+  background-color: #40205B; border-color: #66388A;
+}

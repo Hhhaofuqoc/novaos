@@ -1,0 +1,74 @@
+{
+  "NovaOS-Dark": {
+    "focused": {
+      "background_rgb": [
+        16,
+        9,
+        28
+      ],
+      "label_rgb": [
+        237,
+        230,
+        255
+      ],
+      "button_label_rgb": [
+        237,
+        230,
+        255
+      ]
+    },
+    "backdrop": {
+      "background_rgb": [
+        16,
+        9,
+        28
+      ],
+      "label_rgb": [
+        237,
+        230,
+        255
+      ],
+      "button_label_rgb": [
+        237,
+        230,
+        255
+      ]
+    }
+  },
+  "NovaOS-Light": {
+    "focused": {
+      "background_rgb": [
+        243,
+        237,
+        252
+      ],
+      "label_rgb": [
+        38,
+        18,
+        55
+      ],
+      "button_label_rgb": [
+        38,
+        18,
+        55
+      ]
+    },
+    "backdrop": {
+      "background_rgb": [
+        243,
+        237,
+        252
+      ],
+      "label_rgb": [
+        38,
+        18,
+        55
+      ],
+      "button_label_rgb": [
+        38,
+        18,
+        55
+      ]
+    }
+  }
+}

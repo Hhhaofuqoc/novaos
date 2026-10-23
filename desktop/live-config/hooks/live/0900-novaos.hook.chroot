@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+# Derivative identification without hiding Debian compatibility.
+cat > /etc/novaos-release <<'RELEASE'
+PRETTY_NAME="NovaOS 0.1.0 (Debian 13)"
+NAME="NovaOS"
+VERSION_ID="0.1.0"
+VERSION="0.1.0 alpha (Debian 13 trixie)"
+ID=novaos
+ID_LIKE=debian
+DEBIAN_VERSION_FULL="13"
+VERSION_CODENAME=trixie
+RELEASE
+ln -sfn novaos-release /etc/os-release
+printf 'NovaOS 0.1.0 alpha — Your universe. Your system.\n\n' > /etc/issue
+# Disable optional discovery daemons on a minimal live session.
+# NetworkManager, Bluetooth and PipeWire remain controlled by the desktop.
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl disable avahi-daemon.service avahi-daemon.socket 2>/dev/null || true
+fi

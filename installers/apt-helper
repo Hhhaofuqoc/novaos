@@ -1,0 +1,39 @@
+#!/usr/bin/python3 -I
+"""Narrow administrative entry point. Never execute arbitrary commands or flags."""
+import os
+import re
+import subprocess
+import sys
+
+def arguments(argv):
+    if argv in (["update"], ["upgrade"]):
+        return ["/usr/bin/apt-get", argv[0]]
+    if len(argv) == 2 and argv[0] == "install" and re.fullmatch(r"[a-z0-9][a-z0-9+.-]*(?::[a-z0-9]+)?", argv[1]):
+        return ["/usr/bin/apt-get", "install", "--", argv[1]]
+    raise ValueError("Uso: apt-helper update | upgrade | install NOME-DO-PACOTE")
+
+def main():
+    try:
+        command = arguments(sys.argv[1:])
+    except ValueError as error:
+        print(error, file=sys.stderr)
+        return 2
+    if os.geteuid() != 0:
+        print("Execute via sudo ou pkexec.", file=sys.stderr)
+        return 1
+    if not sys.stdin.isatty():
+        print("Abra um terminal interativo para confirmar a operação.", file=sys.stderr)
+        return 1
+    print("Comando: " + " ".join(command))
+    try:
+        if input("Continuar? Digite SIM: ").strip() != "SIM":
+            return 1
+    except EOFError:
+        return 1
+    # Ignore user-supplied APT_CONFIG/PYTHONPATH and run from a trusted directory.
+    os.chdir("/")
+    return subprocess.call(command, env={"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "HOME": "/root",
+                                        "LANG": "C.UTF-8", "TERM": os.environ.get("TERM", "xterm")})
+
+if __name__ == "__main__":
+    raise SystemExit(main())

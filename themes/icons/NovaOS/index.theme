@@ -1,0 +1,12 @@
+[Icon Theme]
+Name=NovaOS
+Comment=Original NovaOS neon application icons
+Inherits=Adwaita,hicolor
+Directories=scalable/apps
+
+[scalable/apps]
+Size=64
+MinSize=16
+MaxSize=256
+Type=Scalable
+Context=Applications

@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "decoder": "ffmpeg",
+  "tracks_verified": 12,
+  "total_audio_seconds": 864.0,
+  "verification_seconds": 1.459,
+  "hardware_playback_tested": false,
+  "tracks": [
+    {
+      "file": "01-neon-rain.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "02-purple-orbit.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "03-quiet-terminal.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "04-digital-memories.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "05-blue-horizon.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "06-floating-pixels.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "07-midnight-kernel.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "08-soft-geometry.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "09-distant-satellites.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "10-empty-desktop.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "11-celestial-code.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    },
+    {
+      "file": "12-nova-dreams.flac",
+      "sha256_verified": true,
+      "complete_decode": true,
+      "codec": "flac",
+      "duration_seconds": 72.0,
+      "sample_rate": 44100,
+      "channels": 2
+    }
+  ]
+}

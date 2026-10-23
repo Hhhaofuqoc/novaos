@@ -1,0 +1,91 @@
+{
+  "backend": "GStreamer playbin",
+  "tracks": [
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "01-neon-rain.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "02-purple-orbit.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "03-quiet-terminal.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "04-digital-memories.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "05-blue-horizon.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "06-floating-pixels.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "07-midnight-kernel.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "08-soft-geometry.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "09-distant-satellites.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "10-empty-desktop.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "11-celestial-code.flac"
+    },
+    {
+      "decoded": true,
+      "duration_seconds": 72.0,
+      "sink": "fakesink",
+      "hardware_playback_tested": false,
+      "file": "12-nova-dreams.flac"
+    }
+  ],
+  "total_seconds": 0.6627065710000011,
+  "hardware_playback_tested": false
+}

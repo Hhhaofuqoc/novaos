@@ -79,7 +79,7 @@ de bloqueio Android. Não use o bloqueio manual KDE para proteger o aparelho.
 Validação executada: 77 testes unitários/lifecycle, shellcheck, Fastfetch 2.40.4
 real e boot Plasma 6.3.6 em Debian x86_64/Xvfb. O teste verifica KWin, configuração
 dos painéis/wallpaper e abre Konsole com NovaFetch. A captura é de uma sessão real.
-Uma amostra de 4 segundos mediu cerca de 0,75% de um núcleo para os processos
+Uma amostra de 4 segundos mediu cerca de 0,25% de um núcleo para os processos
 monitorados no ambiente cloud. Isso não prevê desempenho no Moto G34. RSS por
 processo pode contar bibliotecas compartilhadas mais de uma vez.
 

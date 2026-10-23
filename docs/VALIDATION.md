@@ -12,6 +12,9 @@ wallpaper e Konsole executando NovaFetch. Evidências:
 [relatório](validation/plasma-report.json), [captura](validation/plasma-desktop.png)
 e [guia experimental](PLASMA-MOBILE.md). São resultados nativos x86_64; não são
 medidas do Moto G34. O relatório preserva avisos de serviços indisponíveis.
+O atualizador público `novaos-visual-v1` também foi baixado via HTTPS: checksum
+do bootstrap, checksum fixado do arquivo e os 14 arquivos internos passaram
+pela verificação real com `--download-only`. Isso não executa a instalação Android.
 
 ## Resultados
 

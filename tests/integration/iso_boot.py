@@ -20,13 +20,22 @@ class JsonSocket:
         if qmp:
             self.receive()
             self.call('qmp_capabilities')
+        else:
+            # QGA persists across client reconnects. Flush partial/stale replies
+            # using its documented synchronization marker before issuing RPCs.
+            identifier=time.monotonic_ns() % (2**52)
+            request={'execute':'guest-sync-delimited','arguments':{'id':identifier}}
+            self.stream.write(b'\xff'+json.dumps(request).encode()+b'\n')
+            while self.receive().get('return') != identifier:
+                pass
 
     def receive(self):
         while True:
             line = self.stream.readline()
             if not line:
                 raise ConnectionError('QEMU socket closed')
-            result = json.loads(line)
+            # guest-sync-delimited prefixes the matching response with 0xff.
+            result = json.loads(line.rsplit(b'\xff',1)[-1])
             if 'event' not in result:
                 return result
 

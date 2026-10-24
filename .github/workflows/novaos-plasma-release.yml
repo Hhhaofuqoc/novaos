@@ -27,8 +27,12 @@ jobs:
           ref: ${{ env.SOURCE_REF }}
           persist-credentials: false
       - name: Prepare the disposable build runner
+        env:
+          REUSE_RUN_ID: ${{ inputs.reuse_run_id }}
         run: |
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/hostedtoolcache
+          if [ -z "$REUSE_RUN_ID" ]; then
+            sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/hostedtoolcache
+          fi
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends qemu-system-x86 ovmf python3-pil
           echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"

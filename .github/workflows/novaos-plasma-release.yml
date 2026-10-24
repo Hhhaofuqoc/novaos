@@ -1,8 +1,15 @@
 name: NovaOS Plasma ISO and SHA256
 on:
   workflow_dispatch:
+    inputs:
+      reuse_run_id:
+        description: Optional run ID containing the already built Plasma ISO artifact
+        required: false
+        default: ''
+        type: string
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: novaos-plasma-live-release
   cancel-in-progress: false
@@ -27,6 +34,7 @@ jobs:
           echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> "$GITHUB_ENV"
           df -h /
       - name: Build the real Debian Plasma Live ISO
+        if: ${{ inputs.reuse_run_id == '' }}
         run: |
           docker run --rm --privileged \
             -e DEBIAN_FRONTEND=noninteractive -e SOURCE_DATE_EPOCH \
@@ -38,6 +46,19 @@ jobs:
               cd dist
               sha256sum -c novaos-0.1.0-plasma-amd64.iso.sha256
             '
+      - name: Recover an already built ISO without rebuilding its filesystem
+        if: ${{ inputs.reuse_run_id != '' }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: NovaOS-Plasma-amd64-ISO-SHA256
+          path: dist
+          run-id: ${{ inputs.reuse_run_id }}
+          github-token: ${{ github.token }}
+      - name: Verify the complete ISO bytes before boot tests and publication
+        run: |
+          test -s dist/novaos-0.1.0-plasma-amd64.iso
+          cd dist
+          sha256sum -c novaos-0.1.0-plasma-amd64.iso.sha256
       - name: Upload the ISO and its checksum
         id: iso_artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -57,6 +78,8 @@ jobs:
       - name: Convert real QEMU screenshots
         if: always()
         run: |
+          # Build containers and QEMU use root; publication runs as the runner.
+          if test -d dist; then sudo chown -R "$(id -u):$(id -g)" dist; fi
           /usr/bin/python3 - <<'PY'
           from pathlib import Path
           from PIL import Image

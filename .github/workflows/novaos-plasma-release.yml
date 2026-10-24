@@ -14,7 +14,8 @@ concurrency:
   group: novaos-plasma-live-release
   cancel-in-progress: false
 env:
-  SOURCE_REF: c1251c79cedc88369159b1b80c34823288b03f8c
+  SOURCE_REF: b8f18d384a2b1add4641eb530173d99719e18335
+  IMAGE_SOURCE_REF: c1251c79cedc88369159b1b80c34823288b03f8c
   RELEASE_TAG: v0.1.0-plasma-live
 jobs:
   plasma-iso:
@@ -106,6 +107,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           ISO_ARTIFACT_URL: ${{ steps.iso_artifact.outputs.artifact-url }}
+          REUSE_RUN_ID: ${{ inputs.reuse_run_id }}
         run: |
           python3 - <<'PY'
           import json, os
@@ -121,13 +123,16 @@ jobs:
           Verifique o arquivo .iso.sha256 antes de gravar a mídia.
           Esta ISO é para PC x86_64, não para instalar como ROM Android.
           '''
-          text+='\nCódigo-fonte: '+os.environ['SOURCE_REF']+'\n'
+          image_source=os.environ['IMAGE_SOURCE_REF'] if os.environ.get('REUSE_RUN_ID') else os.environ['SOURCE_REF']
+          text+='\nCódigo-fonte da imagem: '+image_source+'\n'
           if iso.stat().st_size>=2*1024**3:
               text+='\nA ISO ultrapassa o limite de 2 GiB por arquivo das Releases. Baixe o artefato completo (ISO + SHA256): '+os.environ['ISO_ARTIFACT_URL']+'\n'
           Path('dist/release-notes.md').write_text(text)
           PY
           if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release create "$RELEASE_TAG" --target "$SOURCE_REF" --prerelease \
+            target_ref="$SOURCE_REF"
+            if [ -n "$REUSE_RUN_ID" ]; then target_ref="$IMAGE_SOURCE_REF"; fi
+            gh release create "$RELEASE_TAG" --target "$target_ref" --prerelease \
               --title 'NovaOS Plasma 0.1.0 Live — ISO x86_64' --notes-file dist/release-notes.md
           fi
           gh release edit "$RELEASE_TAG" --notes-file dist/release-notes.md

@@ -1,17 +1,33 @@
 # NovaOS Desktop 0.1.0 alpha
 
-A edição principal usa Debian 13 (trixie), kernel Linux, systemd, APT, Xorg e
-XFCE. O tema, dock, widgets e aplicativos são instalados como arquivos e pacotes
+A edição Plasma usa Debian 13 (trixie), kernel Linux, systemd, APT, Xorg e
+KDE Plasma 6. O tema, dock, widgets e aplicativos são instalados como arquivos e pacotes
 Linux reais. A instalação em Debian existente é o caminho mais curto para testar
 esta versão. A configuração `plasma` adiciona KDE Plasma; a integração visual
-NovaOS completa nessa sessão ainda não está implementada.
+Night Room já está implementada e foi testada nativamente com X11. A edição Lite
+com XFCE continua disponível como alternativa.
+
+## Gerar no GitHub
+
+O workflow [NovaOS Plasma ISO and SHA256](https://github.com/Hhhaofuqoc/novaos/actions/workflows/novaos-plasma-release.yml)
+na branch `main` usa uma revisão explícita da implementação Plasma da branch
+`mobile-lite-0.1.0`. Ele compila em Debian 13, verifica o hash, faz boot BIOS e
+UEFI da ISO real em QEMU e publica uma prerelease após esses testes passarem.
+O workflow foi acrescentado sem substituir os outros arquivos da branch `main`.
+
+Arquivos de saída: `novaos-0.1.0-plasma-amd64.iso` e
+`novaos-0.1.0-plasma-amd64.iso.sha256`. As execuções e seus artefatos mostram o
+resultado real de cada tentativa; a existência da automação não comprova sucesso.
+Se o arquivo exceder o limite de 2 GiB de uma release, a página de release aponta
+para o artefato GitHub Actions contendo a ISO inteira e seu hash.
 
 ## Instalar os pacotes em Debian 13
 
 Use os artefatos gerados localmente por `bash scripts/release.sh`, ou uma release
 publicada pelo mantenedor. Confira `SHA256SUMS` comparando o arquivo de hashes com
 uma fonte confiável. Os hashes detectam corrupção, mas não substituem assinatura
-ou verificação da origem. Não há URL de download oficial configurada neste projeto.
+ou verificação da origem. Os downloads Desktop publicados ficam nas Releases
+e nos artefatos da automação do repositório.
 
 ```sh
 cd dist
@@ -49,7 +65,7 @@ ISO se o live-build produzir `live-image-amd64.hybrid.iso` não vazia. O resulta
 arquivo `.iso` de demonstração. `--configure-only` prepara a configuração e os
 pacotes, sem debootstrap/build; isso não prova que a ISO inicializa.
 
-`--edition plasma` seleciona a alternativa experimental mais pesada, SDDM e KDE.
+`--edition plasma` seleciona a edição experimental mais pesada, SDDM e KDE X11.
 Use diretórios diferentes para cada edição. Para refazer um build existente,
 execute `sudo lb clean` dentro do workdir ou escolha um diretório vazio com
 `--workdir`. O script nunca apaga um diretório arbitrário automaticamente.
@@ -57,7 +73,9 @@ execute `sudo lb clean` dentro do workdir ou escolha um diretório vazio com
 A receita solicita BIOS/UEFI por syslinux e grub-efi e usa componentes Debian para
 boot. Secure Boot não é declarado validado. Suporte a Wi-Fi/GPU depende do kernel,
 firmware distribuível Debian e hardware; o repositório `non-free-firmware` é
-habilitado na ISO. Nenhum benchmark de 3 GB está implícito na receita.
+habilitado na ISO. Firmware é instalado no sistema Live, sem duplicar todos os
+pacotes de firmware na área externa do instalador. Nenhum benchmark de 3 GB está
+implícito na receita. O instalador e Secure Boot precisam de validação separada.
 
 ## Modo Live, instalação e persistência
 
@@ -93,6 +111,12 @@ instalador, crie um disco qcow2 descartável com `qemu-img create -f qcow2 teste
 abertura de terminal/arquivos/NovaMusic, áudio, rede, persistência após reboot e
 instalação no disco virtual. Registre ISO hash, BIOS/UEFI, CPU/RAM, data e resultados
 em `docs/VALIDATION.md`. A existência da receita ou dos jobs CI não prova boot.
+
+A automação usa `tests/integration/iso_boot.py` com 4 GiB de RAM, QMP e QEMU Guest
+Agent para verificar a sessão Live, KWin X11, quatro desktops, tema, widgets e
+abertura de Konsole/Dolphin. Capturas vêm do framebuffer real do QEMU. Nenhum
+disco físico é anexado. O agente QEMU usa um canal virtio local; não abre porta
+de rede e seu serviço depende do dispositivo virtual correspondente.
 
 ## Atualização e remoção
 

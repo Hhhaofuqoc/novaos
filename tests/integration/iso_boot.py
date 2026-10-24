@@ -147,7 +147,7 @@ def main():
             'physical_audio_tested':False,'physical_disk_attached':False}
     log=(target/'qemu.log').open('w')
     proc=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT)
-    started=time.monotonic();qmp=None
+    started=time.monotonic();qmp=None;boot_selected=False;last_capture=0
     try:
         deadline=started+args.timeout
         while time.monotonic()<deadline:
@@ -155,6 +155,20 @@ def main():
                 raise RuntimeError('QEMU exited: '+(target/'qemu.log').read_text()[-1000:])
             if qmp is None and qmp_path.exists():
                 qmp=JsonSocket(qmp_path,qmp=True)
+            elapsed=time.monotonic()-started
+            if qmp and elapsed>=20 and not boot_selected:
+                # Debian live-build's BIOS menu waits indefinitely by default.
+                # Select its default Live entry just as a user presses Enter.
+                qmp.call('send-key',{'keys':[{'type':'qcode','data':'ret'}]})
+                boot_selected=True
+                report['live_menu_enter_sent']=True
+                print('Selected the default Live boot entry',flush=True)
+            if qmp and elapsed-last_capture>=30:
+                qmp.call('screendump',{'filename':str(target/'screen.ppm')})
+                last_capture=elapsed
+                report['elapsed_seconds']=round(elapsed,2)
+                (target/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+                print(f'Waiting for the real KDE guest: {elapsed:.0f}s',flush=True)
             try:
                 agent=JsonSocket(agent_path)
                 try:
